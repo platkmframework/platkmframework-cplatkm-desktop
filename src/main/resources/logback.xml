@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Definir el nivel de logs para toda la aplicación -->
+    <root level="info">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+    <!-- Configurar salida en la consola -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
+</configuration>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.platkmframework.cplatkm</groupId>
+    <artifactId>platkmframework-cplatkm-desktop</artifactId>
+    <version>0.0.1-SNAPSHOT</version> 
+  
+    <packaging>jar</packaging>
+    
+    <name>org.platkmframework.cplatkm:platkmframework-cplatkm-desktop</name>
+    <description>Code generator Desktop</description>
+    <url>https://github.com/platkmframework/platkmframework-cgenerator-desktop</url>
+    <licenses>
+            <license>
+                    <name>The Apache Software License, Version 2.0</name>
+                    <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            </license>
+    </licenses>
+    <developers>
+      <developer>
+       <name>Eduardo Iglesias</name>
+       <email>eiglesias@platkmframework.org</email>
+       <organization>PLATKMFramework</organization>
+       <organizationUrl>https://www.platkmframework.org</organizationUrl>
+      </developer>
+    </developers>  
+    <scm>
+      <connection>scm:git:git://github.com/simpligility/ossrh-demo.git</connection>
+      <developerConnection>scm:git:ssh://github.com:simpligility/ossrh-demo.git</developerConnection>
+      <url>http://github.com/simpligility/ossrh-demo/tree/master</url>
+    </scm> 
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>20</maven.compiler.source>
+        <maven.compiler.target>20</maven.compiler.target> 
+    </properties>
+    
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>3.6.0</version>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>shade</goal>
+              </goals>
+              <configuration>
+                <transformers> 
+                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                        <manifestEntries>
+                            <Main-Class>org.platkmframework.cplatkm.Application</Main-Class>
+                            <Implementation-Version>${project.version}</Implementation-Version>
+                            <Implementation-Title>${project.name}</Implementation-Title>
+                        </manifestEntries>
+                    </transformer>
+                  
+                </transformers>
+                <filters>
+                      <filter>
+                          <artifact>*:*</artifact>
+                          <excludes>
+                              <exclude>META-INF/*.SF</exclude>
+                              <exclude>META-INF/*.DSA</exclude>
+                              <exclude>META-INF/*.RSA</exclude>
+                          </excludes>
+                      </filter>
+                  </filters>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </build> 
+    
+    <dependencies>
+  	<dependency>
+            <groupId>org.platkmframework.cplatkm</groupId>
+            <artifactId>platkmframework-cplatkm-processor</artifactId>
+            <version>1.0.0</version>
+  	</dependency>      
+  	<dependency>
+	  <groupId>org.platkmframework.databasereader</groupId>
+	  <artifactId>platkmframework-databasereader</artifactId>
+		<version>1.0.1</version>
+  	</dependency>        
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+  	<dependency>
+	    <groupId>org.postgresql</groupId>
+	    <artifactId>postgresql</artifactId>
+	    <version>42.3.1</version>
+	</dependency> 
+	<dependency>
+	    <groupId>mysql</groupId>
+	    <artifactId>mysql-connector-java</artifactId>
+	    <version>8.0.33</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.mariadb.jdbc</groupId>
+	    <artifactId>mariadb-java-client</artifactId>
+	    <version>3.0.6</version>
+	</dependency>
+        
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.5.4</version> 
+        </dependency>
+        
+        <!-- API de SLF4J -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+
+        <!-- Implementación de Logback -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.4.14</version>
+        </dependency>
+
+    </dependencies>
+</project>

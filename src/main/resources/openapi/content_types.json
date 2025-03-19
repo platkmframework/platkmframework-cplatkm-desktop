@@ -1,0 +1,242 @@
+[
+  {
+    "name": "JSON",
+    "contentType": "application/json",
+    "classification": "Datos estructurados",
+    "formatType": "JSON"
+  },
+  {
+    "name": "JSON-LD",
+    "contentType": "application/ld+json",
+    "classification": "Datos estructurados",
+    "formatType": "JSON"
+  },
+  {
+    "name": "XML",
+    "contentType": "application/xml",
+    "classification": "Datos estructurados",
+    "formatType": "XML"
+  },
+  {
+    "name": "XHTML",
+    "contentType": "application/xhtml+xml",
+    "classification": "Datos estructurados",
+    "formatType": "XHTML"
+  },
+  {
+    "name": "Form URL Encoded",
+    "contentType": "application/x-www-form-urlencoded",
+    "classification": "Formularios y datos estructurados",
+    "formatType": "Clave-valor"
+  },
+  {
+    "name": "Multipart Form Data",
+    "contentType": "multipart/form-data",
+    "classification": "Formularios y datos estructurados",
+    "formatType": "Multipart"
+  },
+  {
+    "name": "Octet Stream",
+    "contentType": "application/octet-stream",
+    "classification": "Archivos binarios",
+    "formatType": "Binario"
+  },
+  {
+    "name": "PDF",
+    "contentType": "application/pdf",
+    "classification": "Archivos y documentos",
+    "formatType": "PDF"
+  },
+  {
+    "name": "ZIP",
+    "contentType": "application/zip",
+    "classification": "Archivos comprimidos",
+    "formatType": "ZIP"
+  },
+  {
+    "name": "GZIP",
+    "contentType": "application/gzip",
+    "classification": "Archivos comprimidos",
+    "formatType": "GZIP"
+  },
+  {
+    "name": "Microsoft Word",
+    "contentType": "application/msword",
+    "classification": "Documentos",
+    "formatType": "DOC"
+  },
+  {
+    "name": "Word OpenXML",
+    "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "classification": "Documentos",
+    "formatType": "DOCX"
+  },
+  {
+    "name": "Microsoft Excel",
+    "contentType": "application/vnd.ms-excel",
+    "classification": "Hojas de cálculo",
+    "formatType": "XLS"
+  },
+  {
+    "name": "Excel OpenXML",
+    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "classification": "Hojas de cálculo",
+    "formatType": "XLSX"
+  },
+  {
+    "name": "Microsoft PowerPoint",
+    "contentType": "application/vnd.ms-powerpoint",
+    "classification": "Presentaciones",
+    "formatType": "PPT"
+  },
+  {
+    "name": "PowerPoint OpenXML",
+    "contentType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "classification": "Presentaciones",
+    "formatType": "PPTX"
+  },
+  {
+    "name": "JavaScript",
+    "contentType": "application/javascript",
+    "classification": "Código y scripts",
+    "formatType": "JavaScript"
+  },
+  {
+    "name": "SQL",
+    "contentType": "application/sql",
+    "classification": "Código y scripts",
+    "formatType": "SQL"
+  },
+  {
+    "name": "GraphQL",
+    "contentType": "application/graphql",
+    "classification": "Código y scripts",
+    "formatType": "GraphQL"
+  },
+  {
+    "name": "NDJSON",
+    "contentType": "application/x-ndjson",
+    "classification": "Datos estructurados",
+    "formatType": "NDJSON"
+  },
+  {
+    "name": "JSON:API",
+    "contentType": "application/vnd.api+json",
+    "classification": "Datos estructurados",
+    "formatType": "JSON:API"
+  },
+  {
+    "name": "GeoJSON",
+    "contentType": "application/geo+json",
+    "classification": "Datos geográficos",
+    "formatType": "GeoJSON"
+  },
+  {
+    "name": "YAML",
+    "contentType": "application/x-yaml",
+    "classification": "Datos estructurados",
+    "formatType": "YAML"
+  },
+  {
+    "name": "CBOR",
+    "contentType": "application/cbor",
+    "classification": "Datos estructurados",
+    "formatType": "Binario CBOR"
+  },
+  {
+    "name": "Texto Plano",
+    "contentType": "text/plain",
+    "classification": "Texto y formatos relacionados",
+    "formatType": "Texto"
+  },
+  {
+    "name": "HTML",
+    "contentType": "text/html",
+    "classification": "Texto y formatos relacionados",
+    "formatType": "HTML"
+  },
+  {
+    "name": "CSS",
+    "contentType": "text/css",
+    "classification": "Código y estilos",
+    "formatType": "CSS"
+  },
+  {
+    "name": "CSV",
+    "contentType": "text/csv",
+    "classification": "Datos tabulares",
+    "formatType": "CSV"
+  },
+  {
+    "name": "TSV",
+    "contentType": "text/tab-separated-values",
+    "classification": "Datos tabulares",
+    "formatType": "TSV"
+  },
+  {
+    "name": "XML (Texto)",
+    "contentType": "text/xml",
+    "classification": "Datos estructurados",
+    "formatType": "XML"
+  },
+  {
+    "name": "JavaScript (Texto, obsoleto)",
+    "contentType": "text/javascript",
+    "classification": "Código y scripts",
+    "formatType": "JavaScript (obsoleto)"
+  },
+  {
+    "name": "Markdown",
+    "contentType": "text/markdown",
+    "classification": "Texto y formatos relacionados",
+    "formatType": "Markdown"
+  },
+  {
+    "name": "PNG",
+    "contentType": "image/png",
+    "classification": "Imágenes",
+    "formatType": "PNG"
+  },
+  {
+    "name": "JPEG",
+    "contentType": "image/jpeg",
+    "classification": "Imágenes",
+    "formatType": "JPEG"
+  },
+  {
+    "name": "GIF",
+    "contentType": "image/gif",
+    "classification": "Imágenes",
+    "formatType": "GIF"
+  },
+  {
+    "name": "SVG",
+    "contentType": "image/svg+xml",
+    "classification": "Imágenes",
+    "formatType": "SVG"
+  },
+  {
+    "name": "MP3",
+    "contentType": "audio/mpeg",
+    "classification": "Audio",
+    "formatType": "MP3"
+  },
+  {
+    "name": "OGG",
+    "contentType": "audio/ogg",
+    "classification": "Audio",
+    "formatType": "OGG"
+  },
+  {
+    "name": "MP4",
+    "contentType": "video/mp4",
+    "classification": "Video",
+    "formatType": "MP4"
+  },
+  {
+    "name": "WebM",
+    "contentType": "video/webm",
+    "classification": "Video",
+    "formatType": "WebM"
+  }
+]
