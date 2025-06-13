@@ -28,9 +28,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel; 
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.processor.data.DataTypeMapping;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 
 /**
  *   Author:
@@ -97,7 +97,7 @@ public final class DataTypePanel extends JPanel {
 
     public void refreshTable() {
         tableModel.setRowCount(0);
-        for (DataTypeMapping art : CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatatypes()) {
+        for (DataTypeMapping art : CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatatypes()) {
             Object[] rowData = {
                 art.getName(),
                 art.getDescription()
@@ -110,53 +110,16 @@ public final class DataTypePanel extends JPanel {
         
         this.dataTypeEditorJPanel.setData(null);
         this.scrollPaneMain.setViewportView(this.dataTypeEditorJPanel);
-        /**
-        DataTypeMapping newItem = showArtifactDialog(null);
-        if (newItem != null) {
-            newItem.setId(Util.randomAlfaNumericString(255)); 
-            try {
-            
-                CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatatypes().add(newItem);
-                refreshTable();
-                
-                CGeneratorContentManager.getInstance().refreshDataTypeSeparator();
-                
-                CGeneratorContentManager.getInstance().updateConfigFile();
-            } catch (CGeneratorException ex) {
-                Logger.getLogger(DataTypePanel.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(this,
-                ex.getMessage(),
-                "Create", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-        * */
     }
 
     private void editDataType() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow >= 0) {
-            DataTypeMapping  current = CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatatypes().get(selectedRow);
+            DataTypeMapping  current = CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatatypes().get(selectedRow);
             
             this.dataTypeEditorJPanel.setData(current);
             this.scrollPaneMain.setViewportView(this.dataTypeEditorJPanel);
         
-             /**
-            DataTypeMapping  updated = showArtifactDialog(current);
-            if (updated != null) {
-                try {
-                    CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatatypes().set(selectedRow, updated);
-                    refreshTable();
-                    CGeneratorContentManager.getInstance().refreshDataTypeSeparator();
-                
-                    CGeneratorContentManager.getInstance().updateConfigFile();
-                } catch (CGeneratorException ex) {
-                    Logger.getLogger(DataTypePanel.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(this,
-                    ex.getMessage(),
-                    "Edit", JOptionPane.WARNING_MESSAGE);
-                }
-            }
-            * */
         } else {
             JOptionPane.showMessageDialog(this,
                 "You should select a record to update.",
@@ -175,12 +138,12 @@ public final class DataTypePanel extends JPanel {
              
             if (response == JOptionPane.YES_OPTION) { 
                 try {
-                    CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatatypes().remove(selectedRow);
+                    CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatatypes().remove(selectedRow);
                     refreshTable();
-                    CGeneratorContentManager.getInstance().refreshDataTypeSeparator();
+                    CPlatkmContentManager.getInstance().refreshDataTypeSeparator();
 
-                    CGeneratorContentManager.getInstance().updateConfigFile();
-                } catch (CGeneratorException ex) {
+                    CPlatkmContentManager.getInstance().updateConfigFile();
+                } catch (CPlatkmException ex) {
                     Logger.getLogger(DataTypePanel.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this,
                     ex.getMessage(),

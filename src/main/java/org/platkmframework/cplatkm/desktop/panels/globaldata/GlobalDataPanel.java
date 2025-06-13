@@ -31,10 +31,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel; 
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.databasereader.model.Table;
 import org.platkmframework.cplatkm.processor.data.GlobalData;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 import org.platkmframework.util.JsonException;
 import org.platkmframework.util.JsonUtil;
 import org.platkmframework.util.Util;
@@ -57,7 +57,7 @@ public final class GlobalDataPanel extends JPanel {
         setLayout(new BorderLayout());
         this.globalDataEditorPanel = globalDataEditorPanel;
         this.scrollPaneMain = scrollPaneMain;
-        this.globalDataAddDataBaseObjectDialog = new GlobalDataAddDataBaseObjectDialog(CGeneratorContentManager.getInstance().getMainFrame(), true);
+        this.globalDataAddDataBaseObjectDialog = new GlobalDataAddDataBaseObjectDialog(CPlatkmContentManager.getInstance().getMainFrame(), true);
     
         // Datos iniciales simulados 
 
@@ -109,7 +109,7 @@ public final class GlobalDataPanel extends JPanel {
 
     public void refreshTable() {
         tableModel.setRowCount(0);
-        for (GlobalData gd : CGeneratorContentManager.getInstance().getCgenetatorConfig().getGlobalDatas()) {
+        for (GlobalData gd : CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas()) {
             Object[] rowData = {
                 gd.getName(),
                 gd.getCode()
@@ -128,7 +128,7 @@ public final class GlobalDataPanel extends JPanel {
     private void editGlobaData() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow >= 0) {
-            GlobalData current = CGeneratorContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().get(selectedRow);
+            GlobalData current = CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().get(selectedRow);
             
             globalDataEditorPanel.setData(current);
             this.scrollPaneMain.setViewportView(this.globalDataEditorPanel);
@@ -150,13 +150,13 @@ public final class GlobalDataPanel extends JPanel {
              
             if (response == JOptionPane.YES_OPTION) { 
                 try {
-                    //GlobalData  current = CGeneratorContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().get(selectedRow);
-                    CGeneratorContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().remove(selectedRow);
+                    //GlobalData  current = CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().get(selectedRow);
+                    CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().remove(selectedRow);
                     refreshTable();
-                    CGeneratorContentManager.getInstance().refreshGlobalDataSeparator();
+                    CPlatkmContentManager.getInstance().refreshGlobalDataSeparator();
 
-                    CGeneratorContentManager.getInstance().updateConfigFile();
-                } catch (CGeneratorException ex) {
+                    CPlatkmContentManager.getInstance().updateConfigFile();
+                } catch (CPlatkmException ex) {
                     Logger.getLogger(GlobalDataPanel.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this,
                     ex.getMessage(),
@@ -172,7 +172,7 @@ public final class GlobalDataPanel extends JPanel {
     
     private void addDataBaseObjects(){
         
-        globalDataAddDataBaseObjectDialog.setLocationRelativeTo(CGeneratorContentManager.getInstance().getMainFrame());
+        globalDataAddDataBaseObjectDialog.setLocationRelativeTo(CPlatkmContentManager.getInstance().getMainFrame());
         globalDataAddDataBaseObjectDialog.setData();
         globalDataAddDataBaseObjectDialog.setVisible(true);
         if(globalDataAddDataBaseObjectDialog.isUpdate() && !globalDataAddDataBaseObjectDialog.getSelectedTables().isEmpty()){
@@ -189,15 +189,15 @@ public final class GlobalDataPanel extends JPanel {
                     String json = JsonUtil.objectToJson(table1);
                     globalData.setData(objectMapper.readValue(json, Map.class));
             
-                    CGeneratorContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().add(globalData);
+                    CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().add(globalData);
                 }
                 
-                CGeneratorContentManager.getInstance().refreshGlobalDataSeparator();  
-                CGeneratorContentManager.getInstance().updateConfigFile();
+                CPlatkmContentManager.getInstance().refreshGlobalDataSeparator();  
+                CPlatkmContentManager.getInstance().updateConfigFile();
                 
                 refreshTable();
 
-            } catch (JsonProcessingException | JsonException | CGeneratorException ex) {
+            } catch (JsonProcessingException | JsonException | CPlatkmException ex) {
                 Logger.getLogger(GlobalDataPanel.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this,
                 ex.getMessage(),

@@ -28,9 +28,9 @@ import org.platkmframework.cplatkm.desktop.commons.editor.ComponentInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.EditComponentsInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.JTextAreaEditorComponentInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.JTextEditorComponentInspector;
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.processor.data.DatabaseData;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 import org.platkmframework.util.Util;
 
 import java.util.logging.Level;
@@ -254,22 +254,22 @@ public class DataBaseEditorPanel extends javax.swing.JPanel {
             try {
                 if(StringUtils.isBlank(item.getId())){
                     item.setId(Util.generateId(255));
-                    CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatabases().add(item);
-                    CGeneratorContentManager.getInstance().refreshDataBaseSeparator();
-                    CGeneratorContentManager.getInstance().updateConfigFile();              
+                    CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatabases().add(item);
+                    CPlatkmContentManager.getInstance().refreshDataBaseSeparator();
+                    CPlatkmContentManager.getInstance().updateConfigFile();              
                 }else{
-                    for (int i = 0; i < CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatabases().size(); i++) {
-                        if (CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatabases().get(i).getId().equals(item.getId())) {
-                            CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatabases().set(i, item);
+                    for (int i = 0; i < CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatabases().size(); i++) {
+                        if (CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatabases().get(i).getId().equals(item.getId())) {
+                            CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatabases().set(i, item);
                             break;
                         }
                     }
-                    CGeneratorContentManager.getInstance().updateConfigFile();
-                    CGeneratorContentManager.getInstance().refreshDataBaseSeparator();
+                    CPlatkmContentManager.getInstance().updateConfigFile();
+                    CPlatkmContentManager.getInstance().refreshDataBaseSeparator();
                 }
                 editComponentsInspector.reset();
                 
-            } catch (CGeneratorException ex) {
+            } catch (CPlatkmException ex) {
                 Logger.getLogger(DatabasePanel.class.getName()).log(Level.SEVERE, null, ex);
                  JOptionPane.showMessageDialog(this,
                 ex.getMessage(),

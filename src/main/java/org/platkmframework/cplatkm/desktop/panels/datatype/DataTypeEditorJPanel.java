@@ -31,9 +31,9 @@ import org.platkmframework.cplatkm.desktop.commons.editor.EditComponentsInspecto
 import org.platkmframework.cplatkm.desktop.commons.editor.JTableEditorComponentInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.JTextAreaEditorComponentInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.JTextEditorComponentInspector;
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.processor.data.DataTypeMapping;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 import org.platkmframework.util.Util;
 import org.platkmframework.util.app.util.ui.OptionValue;
 
@@ -271,13 +271,13 @@ public class DataTypeEditorJPanel extends javax.swing.JPanel {
             this.item.setId(Util.randomAlfaNumericString(255)); 
             try {
             
-                CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatatypes().add(this.item);
-                CGeneratorContentManager.getInstance().refreshDataTypeSeparator();
-                CGeneratorContentManager.getInstance().updateConfigFile();
+                CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatatypes().add(this.item);
+                CPlatkmContentManager.getInstance().refreshDataTypeSeparator();
+                CPlatkmContentManager.getInstance().updateConfigFile();
                 
                 editComponentsInspector.reset();  
                 
-            } catch (CGeneratorException ex) {
+            } catch (CPlatkmException ex) {
                 Logger.getLogger(DataTypePanel.class.getName()).log(Level.ALL.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this,
                 ex.getMessage(),
@@ -285,18 +285,18 @@ public class DataTypeEditorJPanel extends javax.swing.JPanel {
             }
         }else{
             try {
-               for (int i = 0; i < CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatatypes().size(); i++) {
-                    if (CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatatypes().get(i).getId().equals(this.item.getId())) {
-                        CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatatypes().set(i, this.item);
+               for (int i = 0; i < CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatatypes().size(); i++) {
+                    if (CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatatypes().get(i).getId().equals(this.item.getId())) {
+                        CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatatypes().set(i, this.item);
                         break;
                     }
                 }
-                CGeneratorContentManager.getInstance().refreshDataTypeSeparator();
-                CGeneratorContentManager.getInstance().updateConfigFile();
+                CPlatkmContentManager.getInstance().refreshDataTypeSeparator();
+                CPlatkmContentManager.getInstance().updateConfigFile();
                 
                 editComponentsInspector.reset();  
                 
-            } catch (CGeneratorException ex) {
+            } catch (CPlatkmException ex) {
                 Logger.getLogger(DataTypePanel.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this,
                 ex.getMessage(),

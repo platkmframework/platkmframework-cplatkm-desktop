@@ -29,10 +29,10 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
  
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.processor.data.Artifact;
 import org.platkmframework.cplatkm.processor.data.Template;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 
 public class TemplatesPanel extends JPanel {
 
@@ -103,26 +103,7 @@ public class TemplatesPanel extends JPanel {
     private void createTemplate() {
         templateEditorJPanel.setData(artifact, null, 0);
         this.scrollPaneMain.setViewportView(this.templateEditorJPanel);
-        /**    
-        Template newItem = showArtifactDialog(null);
-        if (newItem != null) {
-            newItem.setId(Util.randomAlfaNumericString(255));
-            newItem.setTemplatename(newItem.getLabel().strip() + "_" + Util.randomAlfaNumericString(10));
-            try {
-                
-                CGeneratorContentManager.getInstance().createTemplateFile(artifact.getFoldername(), newItem.getTemplatename());
-                artifact.getTemplates().add(newItem);
-                refreshTable();
-                CGeneratorContentManager.getInstance().templateAddNewNode(newItem, artifact);
-                
-                CGeneratorContentManager.getInstance().updateConfigFile();
-            } catch (CGeneratorException ex) {
-                Logger.getLogger(TemplatesPanel.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(this,
-                ex.getMessage(),
-                "Create", JOptionPane.WARNING_MESSAGE);
-            }
-        }*/
+        
     }
 
     private void editTemplate() {
@@ -131,24 +112,7 @@ public class TemplatesPanel extends JPanel {
             Template current = artifact.getTemplates().get(selectedRow);
             templateEditorJPanel.setData(artifact, current, selectedRow);
             this.scrollPaneMain.setViewportView(this.templateEditorJPanel);
-            /**
-            Template  updated = showArtifactDialog(current, );
-            if (updated != null) {
-                try {
-                    
-                    artifact.getTemplates().set(selectedRow, updated);
-                    refreshTable();
-                
-                    CGeneratorContentManager.getInstance().templateUpdateNewNode(updated);
-                
-                    CGeneratorContentManager.getInstance().updateConfigFile();
-                } catch (CGeneratorException ex) {
-                    Logger.getLogger(TemplatesPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(this,
-                    ex.getMessage(),
-                    "Edit", JOptionPane.WARNING_MESSAGE);
-                }
-            }*/
+            
         }else {
             JOptionPane.showMessageDialog(this,
                 "Select element to edit.",
@@ -170,11 +134,10 @@ public class TemplatesPanel extends JPanel {
                     Template template = artifact.getTemplates().get(selectedRow);
                     artifact.getTemplates().remove(selectedRow);
                     refreshTable();
-                    //CGeneratorConfigManager.getInstance().treeRemoveNodeFromParentType(TreeNodeTypes.TEMPLATE_SEPARATOR_TYPE, artifact.getId(), template.getId());
-                    CGeneratorContentManager.getInstance().templateRemoveNewNode(template, artifact);
-                    CGeneratorContentManager.getInstance().updateConfigFile();
+                    CPlatkmContentManager.getInstance().templateRemoveNewNode(template, artifact);
+                    CPlatkmContentManager.getInstance().updateConfigFile();
                     
-                } catch (CGeneratorException ex) {
+                } catch (CPlatkmException ex) {
                     Logger.getLogger(TemplatesPanel.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this,
                     ex.getMessage(),

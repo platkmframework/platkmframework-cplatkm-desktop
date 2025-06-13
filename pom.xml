@@ -9,7 +9,7 @@
     
     <name>org.platkmframework.cplatkm:platkmframework-cplatkm-desktop</name>
     <description>Code generator Desktop</description>
-    <url>https://github.com/platkmframework/platkmframework-cgenerator-desktop</url>
+    <url>https://github.com/platkmframework/platkmframework-cplatkm-desktop</url>
     <licenses>
             <license>
                     <name>The Apache Software License, Version 2.0</name>
@@ -32,8 +32,8 @@
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>20</maven.compiler.source>
-        <maven.compiler.target>20</maven.compiler.target> 
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target> 
     </properties>
     
     <build>
@@ -107,7 +107,11 @@
 	    <artifactId>mariadb-java-client</artifactId>
 	    <version>3.0.6</version>
 	</dependency>
-        
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>11.2.3.jre17</version>
+        </dependency>        
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>

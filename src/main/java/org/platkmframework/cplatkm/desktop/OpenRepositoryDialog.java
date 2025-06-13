@@ -18,71 +18,32 @@
  *  	Eduardo Iglesias Taylor - initial API and implementation
  * *****************************************************************************
  */
-package org.platkmframework.cplatkm.desktop.panels.runconfigurations;
+package org.platkmframework.cplatkm.desktop;
 
-import java.awt.Component;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JCheckBox;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import org.platkmframework.cplatkm.desktop.commons.ObjectSelection;
 import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
-import org.platkmframework.cplatkm.desktop.core.components.table.checkbox.CheckBoxRenderer;
-import org.platkmframework.cplatkm.processor.data.DataTypes;
-import org.platkmframework.cplatkm.processor.data.GlobalData;
-import org.platkmframework.cplatkm.processor.data.OpenApiImported;
- 
 /**
  *
  * @author Eduardo Iglesias
  */
-public class RunConfigAddDataDialog extends javax.swing.JDialog {
+public class OpenRepositoryDialog extends javax.swing.JDialog {
 
-    DefaultTableModel tableDataModel;
-    private List<ObjectSelection> selectedTables;
+    DefaultTableModel tableDataModel; 
     
-    public boolean updated;
+    public String selectedWorkSpace;
     /**
      * Creates new form RunConfigTemplatePathJDialog
      */
-    public RunConfigAddDataDialog(java.awt.Frame parent, boolean modal) {
+    public OpenRepositoryDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setLocationRelativeTo(CPlatkmContentManager.getInstance().getMainFrame());
         
-        selectedTables = new ArrayList<>();
-        
-        tableDataModel = new DefaultTableModel(new String[] {"Name", "Type", "Selected" }, 0){
-            @Override
-            public Class<?> getColumnClass(int columnIndex) {
-                if (columnIndex == 2) {
-                    return Boolean.class;
-                }
-                return super.getColumnClass(columnIndex);
-            }
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return column==2;
-            }
-        };
+        tableDataModel = new DefaultTableModel(new String[] {"Name" }, 0);
         
         tableData.setRowHeight(26);
         tableData.setAutoCreateRowSorter(true);
         tableData.setModel(tableDataModel);
-        
-        CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer(){
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-               Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-               selectedTables.get(row).setSelected(super.isSelected());
-               return c;
-            }        
-        };
-        tableData.getColumnModel().getColumn(2).setCellRenderer(checkBoxRenderer);
-        tableData.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JCheckBox()));
  
     }
 
@@ -110,14 +71,14 @@ public class RunConfigAddDataDialog extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Name", "Type", "Selected"
+                "Name"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Boolean.class
+                java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, true
+                false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -143,11 +104,11 @@ public class RunConfigAddDataDialog extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        btnAdd.setText("Add");
+        btnAdd.setText("Open");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
@@ -207,12 +168,16 @@ public class RunConfigAddDataDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        this.updated = true;
-        setVisible(false);
+        
+        if(tableData.getSelectedRow() > -1){
+            this.selectedWorkSpace = this.tableData.getValueAt(this.tableData.getSelectedRow(), 0).toString();
+            setVisible(false);
+        }
+       
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        this.updated = false;
+        this.selectedWorkSpace = null;
         setVisible(false);
     }//GEN-LAST:event_btnCancelActionPerformed
 
@@ -233,14 +198,18 @@ public class RunConfigAddDataDialog extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(RunConfigAddDataDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OpenRepositoryDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(RunConfigAddDataDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OpenRepositoryDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(RunConfigAddDataDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OpenRepositoryDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(RunConfigAddDataDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OpenRepositoryDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -249,7 +218,7 @@ public class RunConfigAddDataDialog extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                RunConfigAddDataDialog dialog = new RunConfigAddDataDialog(new javax.swing.JFrame(), true);
+                OpenRepositoryDialog dialog = new OpenRepositoryDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -271,47 +240,26 @@ public class RunConfigAddDataDialog extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
  
-    public void setData(){
+    /**
+     * loadRepositoryInfo
+     */
+    public void loadRepositoryInfo(){
         
+        this.selectedWorkSpace = null;
+                
         tableDataModel.setRowCount(0);
-        selectedTables.clear();
-        
-        ObjectSelection objectSelection;
-        for (GlobalData gd : CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas()) {
-            objectSelection = new ObjectSelection();
-            objectSelection.setId(gd.getId());
-            objectSelection.setName(gd.getName());
-            objectSelection.setType(DataTypes.GLOBAL_DATA.name());
-            objectSelection.setObj(gd);
-            selectedTables.add(objectSelection);
-        }
-        
-        for (OpenApiImported cgOpenAPI : CPlatkmContentManager.getInstance().getCgenetatorConfig().getOpenAPIs()) {
-            objectSelection = new ObjectSelection();
-            objectSelection.setId(cgOpenAPI.getId());
-            objectSelection.setName(((Map<?,?>)cgOpenAPI.getData().get("info")).get("title").toString());
-            objectSelection.setType(DataTypes.OPENAPI.name());
-            objectSelection.setObj(cgOpenAPI); 
-            selectedTables.add(objectSelection);
-             
-        }
-        
-        for (ObjectSelection objectSelection1 : selectedTables) {
+       
+        for (String workSpaceFolderName :  CPlatkmContentManager.getInstance().getWorkSpaceFolders()) {
             Object[] rowData = {
-                objectSelection1.getName(),
-                objectSelection1.getType(),
-                Boolean.FALSE
+              workSpaceFolderName
             };
             tableDataModel.addRow(rowData);
         }
     }
 
-    public boolean isUpdated() {
-        return updated;
-    }
 
-    public List<ObjectSelection> getSelectedTables() {
-        return selectedTables;
+    public String getSelectedWorkSpace() {
+        return selectedWorkSpace;
     }
      
 }

@@ -32,10 +32,10 @@ import org.platkmframework.cplatkm.desktop.commons.editor.JCheckBoxComponentInsp
 import org.platkmframework.cplatkm.desktop.commons.editor.JTableEditorComponentInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.JTextAreaEditorComponentInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.JTextEditorComponentInspector;
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.processor.data.Artifact;
 import org.platkmframework.cplatkm.processor.data.Template;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 import org.platkmframework.util.Util;
 import org.platkmframework.util.app.util.ui.OptionValue;
 
@@ -306,15 +306,15 @@ public class TemplateEditorJPanel extends javax.swing.JPanel {
             this.item.setTemplatename(this.item.getLabel().strip() + "_" + Util.randomAlfaNumericString(10));
             try {
 
-                CGeneratorContentManager.getInstance().createTemplateFile(artifact.getFoldername(), this.item.getTemplatename());
+                CPlatkmContentManager.getInstance().createTemplateFile(artifact.getFoldername(), this.item.getTemplatename());
                 artifact.getTemplates().add(this.item);
-                CGeneratorContentManager.getInstance().templateAddNewNode(this.item, artifact);
+                CPlatkmContentManager.getInstance().templateAddNewNode(this.item, artifact);
 
-                CGeneratorContentManager.getInstance().updateConfigFile();
+                CPlatkmContentManager.getInstance().updateConfigFile();
                 
                 editComponentsInspector.reset();  
                 
-            } catch (CGeneratorException ex) {
+            } catch (CPlatkmException ex) {
                 Logger.getLogger(TemplatesPanel.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this,
                 ex.getMessage(),
@@ -324,12 +324,12 @@ public class TemplateEditorJPanel extends javax.swing.JPanel {
                 try {
                     
                     artifact.getTemplates().set(selectedRow, this.item);
-                    CGeneratorContentManager.getInstance().templateUpdateNewNode(this.item);
-                    CGeneratorContentManager.getInstance().updateConfigFile();
+                    CPlatkmContentManager.getInstance().templateUpdateNewNode(this.item);
+                    CPlatkmContentManager.getInstance().updateConfigFile();
                     
                     editComponentsInspector.reset();  
                     
-                } catch (CGeneratorException ex) {
+                } catch (CPlatkmException ex) {
                     Logger.getLogger(TemplatesPanel.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this,
                     ex.getMessage(),

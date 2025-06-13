@@ -28,9 +28,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel; 
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.processor.data.Artifact;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 
 /**
  *   Author:
@@ -97,7 +97,7 @@ public final class ArtifactPanel extends JPanel {
 
     public void refreshTable() {
         tableModel.setRowCount(0);
-        for (Artifact art : CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts()) {
+        for (Artifact art : CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts()) {
             Object[] rowData = {
                 art.getLabel()
             };
@@ -108,61 +108,16 @@ public final class ArtifactPanel extends JPanel {
     private void createArtifact() {
         this.artifactEditorPanel.setData(null);
         this.scrollPaneMain.setViewportView(this.artifactEditorPanel);
-    /**    
-        Artifact newItem = showArtifactDialog(null);
-        if (newItem != null) {
-            newItem.setId(Util.randomAlfaNumericString(255));
-            newItem.setFoldername(newItem.getLabel().strip() + "_" + Util.randomAlfaNumericString(10).replaceAll(" ", "_"));
-            try {
-                
-                CGeneratorContentManager.getInstance().createArtifactFolder(newItem.getFoldername());
-                CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().add(newItem);
-                refreshTable();
-                CGeneratorContentManager.getInstance().artifactAddNewNode(newItem);
-                
-                /**
-                CGTreeNode treeNodeTemplateSeparator = new CGTreeNode("Templates", TreeNodeTypes.TEMPLATE_SEPARATOR_TYPE.name());
-                treeNodeTemplateSeparator.setParentId(newItem.getId());
-                CGTreeNode treeNodeArtNew  = new CGTreeNode(newItem, TreeNodeTypes.ARTIFACT_TYPE.name(), newItem.getLabel(), newItem.getId());
-                treeNodeArtNew.add(treeNodeTemplateSeparator);  
-                
-                CGeneratorConfigManager.getInstance().treeAddFNodeFromParentType(TreeNodeTypes.ARTIFACT_SEPARATOR_TYPE, treeNodeArtNew);
-                *
-                
-                CGeneratorContentManager.getInstance().updateConfigFile();
-            } catch (CGeneratorException ex) {
-                Logger.getLogger(ArtifactPanel.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(this,
-                ex.getMessage(),
-                "Create", JOptionPane.WARNING_MESSAGE);
-            }
-        }*/
+    
     }
 
     private void editArtifact() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow >= 0) {
-            Artifact current = CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().get(selectedRow);
+            Artifact current = CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts().get(selectedRow);
             this.artifactEditorPanel.setData(current);
             this.scrollPaneMain.setViewportView(this.artifactEditorPanel);
-        
-            /**        Artifact  updated = showArtifactDialog(current);
-            if (updated != null) {
-                
-                try {
-                    CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().set(selectedRow, updated);
-                    refreshTable();
-                    CGeneratorContentManager.getInstance().artifactUpdateNewNode(artifactDialog.item);
-                
-                    CGeneratorContentManager.getInstance().updateConfigFile();
-                } catch (CGeneratorException ex) {
-                    Logger.getLogger(ArtifactPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(this,
-                    ex.getMessage(),
-                    "Edit", JOptionPane.WARNING_MESSAGE);
-                }
-            }
-            */
+ 
         } else {
             JOptionPane.showMessageDialog(this,
                 "You should select the record to update.",
@@ -181,14 +136,14 @@ public final class ArtifactPanel extends JPanel {
             if (response == JOptionPane.YES_OPTION) {
                 
                 try {
-                    Artifact artifact = CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().get(selectedRow);
-                    CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().remove(selectedRow);
+                    Artifact artifact = CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts().get(selectedRow);
+                    CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts().remove(selectedRow);
                     refreshTable();
-                    CGeneratorContentManager.getInstance().artifactRemoveNewNode(artifact);
+                    CPlatkmContentManager.getInstance().artifactRemoveNewNode(artifact);
 
-                    CGeneratorContentManager.getInstance().updateConfigFile();
+                    CPlatkmContentManager.getInstance().updateConfigFile();
                     
-                } catch (CGeneratorException ex) {
+                } catch (CPlatkmException ex) {
                     Logger.getLogger(ArtifactPanel.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this,
                     ex.getMessage(),
@@ -200,25 +155,5 @@ public final class ArtifactPanel extends JPanel {
                 "You shoul select the record to remove.",
                 "Delete", JOptionPane.WARNING_MESSAGE);
         }
-    }
-
-    /**
-     * Muestra un diálogo para crear/editar un ArtifactItem.
-     * @param item Si es null, se crea uno nuevo; si no, se edita el existente.
-     * @return El ArtifactItem creado/editado o null si se canceló.
-   
-    private Artifact  showArtifactDialog(Artifact item) {
-        if(artifactDialog == null)  
-            artifactDialog = new ArtifactDialog( CGeneratorContentManager.getInstance().getMainFrame(), true);
-        
-         artifactDialog.setLocationRelativeTo(CGeneratorContentManager.getInstance().getMainFrame());    
-        artifactDialog.setData(item);
-        artifactDialog.setVisible(true);
-        
-        if(artifactDialog.isUdpdated()) 
-            return artifactDialog.getItem(); 
-        else 
-        return null;
-    }
-     */
+    } 
 }

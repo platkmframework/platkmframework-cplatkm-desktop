@@ -18,6 +18,7 @@ package org.platkmframework.cplatkm.desktop.panels.runconfigurations;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import java.awt.Dialog;
 import java.awt.HeadlessException;
 import java.io.File;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -44,7 +46,7 @@ import org.platkmframework.cplatkm.desktop.commons.editor.JComboBoxComponentInsp
 import org.platkmframework.cplatkm.desktop.commons.editor.JTableEditorComponentInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.JTextEditorComponentInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.JTextPaneComponentInspector;
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.desktop.core.components.table.checkbox.CheckBoxRenderer;
 import org.platkmframework.cplatkm.processor.CodeGenerationRunner;
 import org.platkmframework.cplatkm.processor.data.Artifact;
@@ -57,7 +59,7 @@ import org.platkmframework.cplatkm.processor.data.RunConfigData;
 import org.platkmframework.cplatkm.processor.data.RunConfigTemplate;
 import org.platkmframework.cplatkm.processor.data.RunConfiguration;
 import org.platkmframework.cplatkm.processor.data.Template;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 import org.platkmframework.util.Util;
 import org.slf4j.LoggerFactory;
 
@@ -89,9 +91,9 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
         initComponents();
         initEditorComponetInspector();
         
-        templateEditorDialog             = new RunConfigPropertiesEditorDialog(CGeneratorContentManager.getInstance().getMainFrame(),true);
-        runConfigArtifactTemplatesDialog = new RunConfigArtifactTemplatesDialog(CGeneratorContentManager.getInstance().getMainFrame(), true);
-        runConfigAddDataDialog     = new RunConfigAddDataDialog(CGeneratorContentManager.getInstance().getMainFrame(), true);
+        templateEditorDialog = new RunConfigPropertiesEditorDialog(CPlatkmContentManager.getInstance().getMainFrame(), "", Dialog.ModalityType.DOCUMENT_MODAL);
+        runConfigArtifactTemplatesDialog = new RunConfigArtifactTemplatesDialog(CPlatkmContentManager.getInstance().getMainFrame(), true);
+        runConfigAddDataDialog = new RunConfigAddDataDialog(CPlatkmContentManager.getInstance().getMainFrame(), true);
         
         this.comboBoxTag = new JComboBox<>();
         fileChooser = new JFileChooser();
@@ -194,6 +196,8 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         txtRootPath = new javax.swing.JTextField();
         btnRootPath = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        runConfigId = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel9 = new javax.swing.JPanel();
@@ -232,15 +236,21 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
             }
         });
 
+        jLabel5.setText("ID:");
+
+        runConfigId.setEditable(false);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -252,24 +262,29 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(txtRootPath)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnRootPath, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnRootPath, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(runConfigId))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(9, 9, 9)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(runConfigId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txtRootPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnRootPath))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         jLabel4.setText("Artifacts");
@@ -332,20 +347,20 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 698, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(32, 32, 32)
+                                .addComponent(cmbArtifiact, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnAddArtifact))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(btnArtTemplates)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnArtifactProperties)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnRemoveArtifact, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(32, 32, 32)
-                                .addComponent(cmbArtifiact, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnAddArtifact))))
+                                .addComponent(btnRemoveArtifact))))
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -365,7 +380,7 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
                     .addComponent(cmbArtifiact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAddArtifact))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRemoveArtifact)
@@ -394,7 +409,7 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
         });
         jScrollPane2.setViewportView(tableData);
 
-        btnAddData.setText("Add Data...");
+        btnAddData.setText("Add Data");
         btnAddData.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddDataActionPerformed(evt);
@@ -416,19 +431,19 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel10Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 692, Short.MAX_VALUE))
+                    .addGroup(jPanel10Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnAddData)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnRemoveData, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnRemoveData, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel10Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRemoveData)
@@ -446,14 +461,14 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 698, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -572,7 +587,7 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
     private void btnArtifactPropertiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArtifactPropertiesActionPerformed
         int selectedRow = tbArtifactData.getSelectedRow();
         if (selectedRow >= 0) {
-            templateEditorDialog.setLocationRelativeTo(CGeneratorContentManager.getInstance().getMainFrame());
+            templateEditorDialog.setLocationRelativeTo(CPlatkmContentManager.getInstance().getMainFrame());
             templateEditorDialog.setData(this.runConfiguration.getArtifacts().get(selectedRow).getProperties());
             templateEditorDialog.setVisible(true);
 
@@ -587,7 +602,7 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
     private void btnArtTemplatesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArtTemplatesActionPerformed
         int selectedRow = tbArtifactData.getSelectedRow();
         if (selectedRow >= 0) {
-            runConfigArtifactTemplatesDialog.setLocationRelativeTo(CGeneratorContentManager.getInstance().getMainFrame());
+            runConfigArtifactTemplatesDialog.setLocationRelativeTo(CPlatkmContentManager.getInstance().getMainFrame());
             runConfigArtifactTemplatesDialog.setData(this.runConfiguration.getRootPath(), this.runConfiguration.getArtifacts().get(selectedRow));
             runConfigArtifactTemplatesDialog.setVisible(true);
 
@@ -627,15 +642,15 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
 
     private void btnRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRunActionPerformed
         try {
-            CodeGenerationRunner.run(CGeneratorContentManager.getInstance().getCurrentWorkSpace().getAbsolutePath(),
-                CGeneratorContentManager.getInstance().getCgenetatorConfig(),
-                runConfiguration);
+            CodeGenerationRunner.run(CPlatkmContentManager.getInstance().getCurrentWorkSpace().getAbsolutePath(),
+                CPlatkmContentManager.getInstance().getCgenetatorConfig(),
+                runConfiguration, Boolean.TRUE);
 
             JOptionPane.showMessageDialog(this,
                 "code generated successfully" ,
                 "Generation Process", JOptionPane.INFORMATION_MESSAGE);
 
-        } catch (HeadlessException | MethodInvocationException | CGeneratorException ex) {
+        } catch (HeadlessException | MethodInvocationException | CPlatkmException ex) {
             Logger.getLogger(RunConfigurationEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this,
                 ex.getMessage(),
@@ -667,22 +682,22 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
 
                 try {
 
-                    for (int i = 0; i < CGeneratorContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().size(); i++) {
-                        if (CGeneratorContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().get(i).getId().equals(this.runConfiguration.getId())){
-                            CGeneratorContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().set(i, this.runConfiguration);
+                    for (int i = 0; i < CPlatkmContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().size(); i++) {
+                        if (CPlatkmContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().get(i).getId().equals(this.runConfiguration.getId())){
+                            CPlatkmContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().set(i, this.runConfiguration);
                             break;
                         }
                     }
 
-                    CGeneratorContentManager.getInstance().updateConfigFile();
+                    CPlatkmContentManager.getInstance().updateConfigFile();
                     setUdpdated(true);
-                    CGeneratorContentManager.getInstance().refreshRunConfigurationSeparator();
+                    CPlatkmContentManager.getInstance().refreshRunConfigurationSeparator();
                     
                     JOptionPane.showMessageDialog(this,
                     "Saved",
                     "Run Configuration", JOptionPane.INFORMATION_MESSAGE);
                     
-                } catch (CGeneratorException ex) {
+                } catch (CPlatkmException ex) {
                     Logger.getLogger(RunConfigurationPanel.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this,
                         ex.getMessage(),
@@ -690,11 +705,11 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
                 }
             }else{
 
-                runConfiguration.setId(Util.randomAlfaNumericString(255));
-                CGeneratorContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().add(this.runConfiguration);
-                CGeneratorContentManager.getInstance().updateConfigFile();
+                runConfiguration.setId(Util.randomAlfaNumericString(20));
+                CPlatkmContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().add(this.runConfiguration);
+                CPlatkmContentManager.getInstance().updateConfigFile();
                 setUdpdated(true);
-                CGeneratorContentManager.getInstance().refreshRunConfigurationSeparator();
+                CPlatkmContentManager.getInstance().refreshRunConfigurationSeparator();
 
                 JOptionPane.showMessageDialog(this,
                     "Saved",
@@ -702,7 +717,7 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
 
             }
 
-        } catch (CGeneratorException | JsonProcessingException ex) {
+        } catch (CPlatkmException | JsonProcessingException ex) {
             Logger.getLogger(RunConfigPropertiesEditorDialog.class.getName()).log(Level.SEVERE, null, ex);
 
             JOptionPane.showMessageDialog(this,
@@ -730,6 +745,7 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
@@ -741,6 +757,7 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JTextField runConfigId;
     private javax.swing.JTable tableData;
     private javax.swing.JTable tbArtifactData;
     private javax.swing.JTextField txtDescription;
@@ -776,7 +793,7 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
         
         final List<RunConfigTemplate> newTemplates = new ArrayList<>(); 
         
-        for (Artifact artifact : CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts()) {
+        for (Artifact artifact : CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts()) {
             cmbArtifiact.addItem(artifact);
             
             runConfiguration.getArtifacts().forEach((a->{
@@ -795,7 +812,7 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
         } 
         
         DataTypeMapping dataTypeMappingSelected = null;
-        for (DataTypeMapping dataTypeMapping : CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatatypes()) {
+        for (DataTypeMapping dataTypeMapping : CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatatypes()) {
             if(dataTypeMapping.getId().equals(runConfiguration.getDataTypeMappingId()))
                 dataTypeMappingSelected = dataTypeMapping;
             cmbDataTypeMapping.addItem(dataTypeMapping);
@@ -805,6 +822,8 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
         
         refreshTableData();
         refreshArtifact();
+        
+        runConfigId.setText(runConfiguration.getId());
      
     }
 
@@ -827,29 +846,40 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
      private void refreshTableData() {
         GlobalData globalData;
         tableDataModel.setRowCount(0);
+        List<String> runConfigDataRemoveList = new ArrayList<>();
+        List<String> runOpenApiImportedList  = new ArrayList<>();
+        
         for (RunConfigData runConfigData : this.runConfiguration.getDatas()) {
             
             if(StringUtils.isNotBlank(runConfigData.getRefId())){
+                
                 if(DataTypes.GLOBAL_DATA.name().equals(runConfigData.getType())){
-                    globalData = CGeneratorContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().stream().filter(a->a.getId().equals(runConfigData.getRefId())).findFirst().orElse(null);
-
-                    Object[] rowData = {
-                        runConfigData.getTags(),
-                        runConfigData.getCode(),
-                        globalData.getName(), 
-                        runConfigData.isActive()
-                    };
-                    tableDataModel.addRow(rowData);
+                    globalData = CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().stream().filter(a->a.getId().equals(runConfigData.getRefId())).findFirst().orElse(null);
+                    
+                    if(globalData == null){
+                        runConfigDataRemoveList.add(runConfigData.getId());
+                    }else{
+                        Object[] rowData = {
+                            runConfigData.getTags(),
+                            runConfigData.getCode(),
+                            globalData.getName(), 
+                            runConfigData.isActive()
+                        };
+                        tableDataModel.addRow(rowData);
+                    }
                 }else if(DataTypes.OPENAPI.name().equals(runConfigData.getType())){
-                    OpenApiImported openApiImported = CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().stream().filter(a->a.getId().equals(runConfigData.getRefId())).findFirst().orElse(null);
-
-                    Object[] rowData = {
-                        runConfigData.getTags(),
-                        runConfigData.getCode(),
-                        ((Map<?,?>)openApiImported.getData().get("info")).get("title").toString(),
-                        runConfigData.isActive()
-                    };
-                    tableDataModel.addRow(rowData);
+                    OpenApiImported openApiImported = CPlatkmContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().stream().filter(a->a.getId().equals(runConfigData.getRefId())).findFirst().orElse(null);
+                    if(openApiImported != null){
+                        Object[] rowData = {
+                            runConfigData.getTags(),
+                            runConfigData.getCode(),
+                            ((Map<?,?>)openApiImported.getData().get("info")).get("title").toString(),
+                            runConfigData.isActive()
+                        };
+                        tableDataModel.addRow(rowData);
+                    }else{
+                        runOpenApiImportedList.add(openApiImported.getId());
+                    }
                 }
             }else{
                 Object[] rowData = {
@@ -861,6 +891,24 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
                 tableDataModel.addRow(rowData);
             }
             
+            if(!runConfigDataRemoveList.isEmpty()){
+                List<RunConfigData> result = this.runConfiguration.getDatas().stream().filter(rcd-> !runConfigDataRemoveList.contains(rcd.getId())).collect(Collectors.toList());
+                this.runConfiguration.setDatas(result);
+            }
+            if(!runOpenApiImportedList.isEmpty()){
+                List<OpenApiImported> result =  CPlatkmContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().stream().filter(rcd-> !runOpenApiImportedList.contains(rcd.getId())).collect(Collectors.toList());
+                CPlatkmContentManager.getInstance().getCgenetatorConfig().setOpenAPIs(result);
+                
+            }
+            
+            if(!runConfigDataRemoveList.isEmpty() || !runOpenApiImportedList.isEmpty()){
+                try {
+                    CPlatkmContentManager.getInstance().updateConfigFile();
+                } catch (CPlatkmException ex) {
+                    Logger.getLogger(RunConfigurationEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
         }
     }
      
@@ -868,7 +916,7 @@ public class RunConfigurationEditorPanel extends javax.swing.JPanel {
         artifactModel.setRowCount(0);
         Artifact artifact;
         for (RunConfigArtifact runConfigArtifact : this.runConfiguration.getArtifacts()) {
-            artifact = CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().stream().filter(a->a.getId().equals(runConfigArtifact.getArtifactId())).findFirst().orElse(null);
+            artifact = CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts().stream().filter(a->a.getId().equals(runConfigArtifact.getArtifactId())).findFirst().orElse(null);
             if(artifact != null){ 
                 Object[] rowData = {
                     artifact.getLabel(),

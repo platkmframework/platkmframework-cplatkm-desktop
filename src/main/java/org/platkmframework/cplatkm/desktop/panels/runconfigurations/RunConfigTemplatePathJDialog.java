@@ -20,12 +20,16 @@
  */
 package org.platkmframework.cplatkm.desktop.panels.runconfigurations;
 
+import java.awt.Dialog;
+import java.awt.Frame;
+import java.awt.GraphicsConfiguration;
+import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 
 /**
  *
@@ -37,14 +41,20 @@ public class RunConfigTemplatePathJDialog extends javax.swing.JDialog {
     public String relativePath;
     public String rootPath;
     DefaultTableModel tableModel;
-    
+
     /**
-     * Creates new form RunConfigTemplatePathJDialog
+     * 
+     * @param owner
+     * @param title
+     * @param modalityType 
      */
-    public RunConfigTemplatePathJDialog(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public RunConfigTemplatePathJDialog(Window owner, String title, ModalityType modalityType) {
+        super(owner, title, modalityType);
+   
         initComponents();
-        setLocationRelativeTo(CGeneratorContentManager.getInstance().getMainFrame());
+        setLocationRelativeTo(CPlatkmContentManager.getInstance().getMainFrame());
+        setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
+        
         
         tableModel = new DefaultTableModel(new Object[]{"Root Path", "Package Name"}, 0){
             
@@ -59,21 +69,21 @@ public class RunConfigTemplatePathJDialog extends javax.swing.JDialog {
             int selectedRow = tblTemplatePaths.getSelectedRow();
             if (selectedRow != -1) {
                 String selectedPath = (String) tableModel.getValueAt(selectedRow, 0);
-                String packageName = JOptionPane.showInputDialog(parent, "Package name should not be empty:", "New Package", JOptionPane.PLAIN_MESSAGE);
+                String packageName = JOptionPane.showInputDialog( null, "Package name should not be empty:", "New Package", JOptionPane.PLAIN_MESSAGE);
 
                 if (packageName != null && !packageName.trim().isEmpty()) {
                     File newPackage = new File(rootPath + File.separator + selectedPath + File.separator + packageName);
                     if (newPackage.mkdir()) {
-                        JOptionPane.showMessageDialog(parent, "Package created.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Package created.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                         refreshTableData();
                         
                         tableModel.addRow(new Object[]{newPackage.getAbsolutePath().replace(selectedPath, ""), packageName});
                     } else {
-                        JOptionPane.showMessageDialog(parent, "The process could´nt create the package.", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "The process could´nt create the package.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             } else {
-                JOptionPane.showMessageDialog(parent, "Select a current package first.", "Create Package", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Select a current package first.", "Create Package", JOptionPane.WARNING_MESSAGE);
             }
         });
         
@@ -202,47 +212,7 @@ public class RunConfigTemplatePathJDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(RunConfigTemplatePathJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(RunConfigTemplatePathJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(RunConfigTemplatePathJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(RunConfigTemplatePathJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                RunConfigTemplatePathJDialog dialog = new RunConfigTemplatePathJDialog(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
+ 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreatePath;

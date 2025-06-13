@@ -31,9 +31,9 @@ import org.platkmframework.cplatkm.desktop.commons.editor.EditComponentsInspecto
 import org.platkmframework.cplatkm.desktop.commons.editor.JTableEditorComponentInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.JTextAreaEditorComponentInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.JTextEditorComponentInspector;
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.processor.data.Artifact;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 import org.platkmframework.util.Util;
 import org.platkmframework.util.app.util.ui.OptionValue;
 
@@ -281,12 +281,12 @@ public class ArtifactEditorPanel extends javax.swing.JPanel {
             this.item.setFoldername(this.item.getLabel().strip() + "_" + Util.randomAlfaNumericString(10).replaceAll(" ", "_"));
             try {
                 
-                CGeneratorContentManager.getInstance().createArtifactFolder(this.item.getFoldername());
-                CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().add(this.item);
-                CGeneratorContentManager.getInstance().artifactAddNewNode(this.item);
-                CGeneratorContentManager.getInstance().updateConfigFile();
+                CPlatkmContentManager.getInstance().createArtifactFolder(this.item.getFoldername());
+                CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts().add(this.item);
+                CPlatkmContentManager.getInstance().artifactAddNewNode(this.item);
+                CPlatkmContentManager.getInstance().updateConfigFile();
                 
-            } catch (CGeneratorException ex) {
+            } catch (CPlatkmException ex) {
                 Logger.getLogger(ArtifactPanel.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this,
                 ex.getMessage(),
@@ -294,16 +294,16 @@ public class ArtifactEditorPanel extends javax.swing.JPanel {
             }        
         }else{
             try {
-                for (int i = 0; i < CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().size(); i++) {
-                    if (CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().get(i).getId().equals(this.item.getId())) {
-                        CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().set(i, this.item);
+                for (int i = 0; i < CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts().size(); i++) {
+                    if (CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts().get(i).getId().equals(this.item.getId())) {
+                        CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts().set(i, this.item);
                         break;
                     }
                 }
 
-                CGeneratorContentManager.getInstance().updateConfigFile();
-                CGeneratorContentManager.getInstance().artifactUpdateNewNode(this.item);
-            } catch (CGeneratorException ex) {
+                CPlatkmContentManager.getInstance().updateConfigFile();
+                CPlatkmContentManager.getInstance().artifactUpdateNewNode(this.item);
+            } catch (CPlatkmException ex) {
                 Logger.getLogger(ArtifactPanel.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this,
                 ex.getMessage(),

@@ -30,7 +30,7 @@ import javax.swing.JColorChooser;
 import org.platkmframework.cplatkm.desktop.commons.editor.ComponentInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.EditComponentsInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.JTextPaneComponentInspector;
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 
 /**
  *
@@ -58,7 +58,7 @@ public class PathsContentEditorPanel extends javax.swing.JPanel {
         });
         
         colorButton.addActionListener(e -> {
-            Color selectedColor = JColorChooser.showDialog(CGeneratorContentManager.getInstance().getMainFrame(), "Elige un color", Color.BLACK);
+            Color selectedColor = JColorChooser.showDialog(CPlatkmContentManager.getInstance().getMainFrame(), "Elige un color", Color.BLACK);
             if (selectedColor != null) {
                 textPane.setForeground(selectedColor);
             }

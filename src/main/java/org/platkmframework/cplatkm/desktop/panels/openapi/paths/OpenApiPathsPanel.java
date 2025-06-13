@@ -30,11 +30,11 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
  
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.processor.data.openapi.CGOpenAPI;
 import org.platkmframework.cplatkm.processor.data.openapi.CGPaths;
 import org.platkmframework.cplatkm.processor.data.openapi.CGTags;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 
 public class OpenApiPathsPanel extends JPanel {
 
@@ -96,66 +96,10 @@ public class OpenApiPathsPanel extends JPanel {
     }
     
     public void refreshTableFromtable(String openApiParentId, String tagParentId) {
-   /**     cgOpenAPIFound = CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().stream().filter(o-> o.getId().equals(openApiParentId)).findFirst().orElse(null);
-        cgTagsFound = cgOpenAPIFound.getTags().stream().filter(t-> t.getId().equals(tagParentId)).findFirst().orElse(null);
-        tableModel.setRowCount(0);
-        for (CGPaths p : cgTagsFound.getPaths()) {
-            Object[] rowData = {
-                p.getSummary()
-            };
-            tableModel.addRow(rowData);
-        }*/
+ 
     }
 
-    /**
-    private void createCGPaths() {
-        CGPaths newItem = showArtifactDialog(null);
-        if (newItem != null) {
-            newItem.setId(Util.randomAlfaNumericString(255)); 
-            try {
-                cgTagsFound.getPaths().add(newItem);
-                refreshTable();
-                CGeneratorConfigManager.getInstance().pathsAddNewNode(newItem, cgTagsFound);
-                
-                CGeneratorConfigManager.getInstance().updateConfigFile();
-            } catch (CGeneratorException ex) {
-                Logger.getLogger(OpenApiPathsPanel.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(this,
-                ex.getMessage(),
-                "Create", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-    }
-*/
-    /**
-    private void editPaths() {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow >= 0) {
-            Paths  current = cgTagsFound.getPaths().get(selectedRow);
-            Paths  updated = showArtifactDialog(current);
-            if (updated != null) {
-                try {
-                    
-                    cgTagsFound.getPaths().set(selectedRow, updated);
-                    refreshTable();
-                
-                    CGeneratorContentManager.getInstance().pathsUpdateNewNode(updated);
-                
-                    CGeneratorContentManager.getInstance().updateConfigFile();
-                } catch (CGeneratorException ex) {
-                    Logger.getLogger(OpenApiPathsPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(this,
-                    ex.getMessage(),
-                    "Edit", JOptionPane.WARNING_MESSAGE);
-                }
-            }
-        } else {
-            JOptionPane.showMessageDialog(this,
-                "Select element to edit.",
-                "Edit", JOptionPane.WARNING_MESSAGE);
-        }
-    }
-*/
+    
     private void deletePaths() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow >= 0) {
@@ -170,11 +114,10 @@ public class OpenApiPathsPanel extends JPanel {
                     CGPaths cgPaths = cgTagsFound.getPaths().get(selectedRow);
                     cgTagsFound.getPaths().remove(selectedRow);
                     refreshTable();
-                    //CGeneratorConfigManager.getInstance().treeRemoveNodeFromParentType(TreeNodeTypes.TEMPLATE_SEPARATOR_TYPE, artifact.getId(), template.getId());
-                    CGeneratorContentManager.getInstance().pathsRemoveNewNode(cgPaths, cgTagsFound);
-                    CGeneratorContentManager.getInstance().updateConfigFile();
+                    CPlatkmContentManager.getInstance().pathsRemoveNewNode(cgPaths, cgTagsFound);
+                    CPlatkmContentManager.getInstance().updateConfigFile();
                     
-                } catch (CGeneratorException ex) {
+                } catch (CPlatkmException ex) {
                     Logger.getLogger(JOptionPane.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this,
                     ex.getMessage(),
@@ -187,36 +130,5 @@ public class OpenApiPathsPanel extends JPanel {
                 "Delete", JOptionPane.WARNING_MESSAGE);
         }
     }
-
-    /**
-     * Muestra un diálogo para crear/editar un ArtifactItem.
-     * @param item Si es null, se crea uno nuevo; si no, se edita el existente.
-     * @return El ArtifactItem creado/editado o null si se canceló.
-     */
-    
-    /**
-    private CGPaths  showArtifactDialog(CGPaths item) {
-        
-        openTagsDialog.setData(item);
-        openTagsDialog.setLocationRelativeTo(CGeneratorConfigManager.getInstance().getMainFrame());
-        openTagsDialog.setVisible(true);
-        
-        if(openTagsDialog.isUdpdated()) 
-            return openTagsDialog.getItem(); 
-        else 
-        return null;
-    
-    }
- */
-    /**
-    public CGOpenAPI getCgOpenAPI() {
-        return cgOpenAPI;
-    }
-
-    public void setCgOpenAPI(CGOpenAPI cgOpenAPI) {
-        this.cgOpenAPI = cgOpenAPI;
-        refreshTable();
-    }
- */
    
 }

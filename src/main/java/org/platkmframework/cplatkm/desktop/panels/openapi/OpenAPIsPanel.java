@@ -28,10 +28,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel; 
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.processor.data.OpenApiImported;
  
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 
 /**
  *   Author:
@@ -97,7 +97,7 @@ public final class OpenAPIsPanel extends JPanel {
 
     public void refreshTable() {
         tableModel.setRowCount(0);
-        for (OpenApiImported gd : CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs()) {
+        for (OpenApiImported gd : CPlatkmContentManager.getInstance().getCgenetatorConfig().getOpenAPIs()) {
             Object[] rowData = {
                 gd.getName()
             };
@@ -113,7 +113,7 @@ public final class OpenAPIsPanel extends JPanel {
     private void editOpenApi() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow >= 0) {
-            OpenApiImported  current = CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().get(selectedRow);
+            OpenApiImported  current = CPlatkmContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().get(selectedRow);
             openApiEditorPanel.setData(current);
             this.scrollPaneMain.setViewportView(this.openApiEditorPanel);
          
@@ -134,12 +134,12 @@ public final class OpenAPIsPanel extends JPanel {
              
             if (response == JOptionPane.YES_OPTION) { 
                 try {
-                    CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().remove(selectedRow);
+                    CPlatkmContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().remove(selectedRow);
                     refreshTable();
-                    CGeneratorContentManager.getInstance().refreshOpenAPISeparator();
+                    CPlatkmContentManager.getInstance().refreshOpenAPISeparator();
 
-                    CGeneratorContentManager.getInstance().updateConfigFile();
-                } catch (CGeneratorException ex) {
+                    CPlatkmContentManager.getInstance().updateConfigFile();
+                } catch (CPlatkmException ex) {
                     Logger.getLogger(OpenAPIsPanel.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this,
                     ex.getMessage(),

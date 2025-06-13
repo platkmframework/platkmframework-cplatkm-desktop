@@ -28,9 +28,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel; 
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.processor.data.DatabaseData;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException; 
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException; 
 
 
 /**
@@ -51,7 +51,7 @@ public final class DatabasePanel extends JPanel {
         this.dataBaseEditorPanel = dataBaseEditorPanel;
         setLayout(new BorderLayout());
         
-        //dataBaseJDialog = new DataBaseJDialog(CGeneratorContentManager.getInstance().getMainFrame(), true);
+        //dataBaseJDialog = new DataBaseJDialog(CPlatkmContentManager.getInstance().getMainFrame(), true);
 
         // Crear modelo de tabla
         String[] columnNames = { "Name", "Driver", "URL" };
@@ -103,7 +103,7 @@ public final class DatabasePanel extends JPanel {
      */
     public void refreshTable() {
         tableModel.setRowCount(0);
-        for (DatabaseData db : CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatabases()) {
+        for (DatabaseData db : CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatabases()) {
             Object[] rowData = {
                 db.getName(),
                 db.getDriver(),
@@ -119,25 +119,6 @@ public final class DatabasePanel extends JPanel {
     private void createDatabase() {
         this.dataBaseEditorPanel.setData(null);
         this.scrollPaneMain.setViewportView(this.dataBaseEditorPanel);
-        /** 
-        DatabaseData dbItem = showDatabaseDialog(null);
-        if (dbItem != null) {
-            try {
-                 
-                dbItem.setId(Util.generateId(255));
-                CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatabases().add(dbItem);
-                refreshTable();
-                
-                CGeneratorContentManager.getInstance().refreshDataBaseSeparator();
-                
-                CGeneratorContentManager.getInstance().updateConfigFile();
-            } catch (CGeneratorException ex) {
-                Logger.getLogger(DatabasePanel.class.getName()).log(Level.SEVERE, null, ex);
-                 JOptionPane.showMessageDialog(this,
-                ex.getMessage(),
-                "Edit", JOptionPane.WARNING_MESSAGE);
-            }
-        }*/
     }
 
     /**
@@ -146,26 +127,10 @@ public final class DatabasePanel extends JPanel {
     private void editDatabase() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow >= 0) {
-            DatabaseData current = CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatabases().get(selectedRow);
+            DatabaseData current = CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatabases().get(selectedRow);
             this.dataBaseEditorPanel.setData(current);
             this.scrollPaneMain.setViewportView(this.dataBaseEditorPanel);
-            /**
-             * DatabaseData updated = showDatabaseDialog(current);
-            if (updated != null) {
-                try {
-                    // Reemplaza el antiguo por el nuevo
-                    CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatabases().set(selectedRow, updated);
-                    refreshTable();
-                    CGeneratorContentManager.getInstance().refreshDataBaseSeparator();
-                    CGeneratorContentManager.getInstance().updateConfigFile();
-                } catch (CGeneratorException ex) {
-                    Logger.getLogger(DatabasePanel.class.getName()).log(Level.SEVERE, null, ex);
-                    
-                    JOptionPane.showMessageDialog(this,
-                ex.getMessage(),
-                "Edit", JOptionPane.WARNING_MESSAGE);
-                }
-            }*/
+ 
         } else {
             JOptionPane.showMessageDialog(this,
                 "You should select a record to update.",
@@ -186,12 +151,12 @@ public final class DatabasePanel extends JPanel {
              
             if (response == JOptionPane.YES_OPTION) {
                 try {
-                    CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatabases().remove(selectedRow);
+                    CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatabases().remove(selectedRow);
                     refreshTable();
-                    CGeneratorContentManager.getInstance().refreshDataBaseSeparator();
+                    CPlatkmContentManager.getInstance().refreshDataBaseSeparator();
                 
-                    CGeneratorContentManager.getInstance().updateConfigFile();
-                } catch (CGeneratorException ex) {
+                    CPlatkmContentManager.getInstance().updateConfigFile();
+                } catch (CPlatkmException ex) {
                     Logger.getLogger(DatabasePanel.class.getName()).log(Level.SEVERE, null, ex);
                      JOptionPane.showMessageDialog(this,
                     ex.getMessage(),
@@ -206,107 +171,6 @@ public final class DatabasePanel extends JPanel {
         }
     }
 
-    /**
-     * Muestra un diálogo para crear/editar un DatabaseItem.
-     * @param item Si es null, se crea uno nuevo; si no, se edita el existente.
-     * @return El DatabaseItem creado/editado o null si se cancela la operación.
      
-    private DatabaseData showDatabaseDialog(DatabaseData item) {
-     
-        //dataBaseJDialog.setLocationRelativeTo(CGeneratorContentManager.getInstance().getMainFrame()); 
-       dataBaseJDialog.setData(item); 
-        dataBaseJDialog.setVisible(true);
-        if(dataBaseJDialog.updated) return dataBaseJDialog.item; else return null;
-        
-      
-        
-//        JTextField nameField = new JTextField(20);
-//        JTextField driverField = new JTextField(20);
-//        JTextField urlField = new JTextField(20);
-//        JTextField userField = new JTextField(20);
-//        JTextField passwordField = new JTextField(20);
-//        JTextField catalogField = new JTextField(20);
-//        JTextField schemaField = new JTextField(20);
-//        JTextField excludedFieldsField = new JTextField(20);
-//        JTextField excludedTableField = new JTextField(20);
-/*        
-        if (item != null) {
-            nameField.setText(item.getName());
-            driverField.setText(item.getDriver());
-            urlField.setText(item.getUrl());
-            userField.setText(item.getUser());
-            passwordField.setText(item.getPassword());
-            catalogField.setText(item.getCatalog());
-            schemaField.setText(item.getSchema());
-            excludedFieldsField.setText(item.getExcludedFields());
-            excludedTableField.setText(item.getExcludedTables());
-        }
-
- 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(new JLabel("Name:"));
-        panel.add(nameField);
-        
-        panel.add(new JLabel("Driver:"));
-        panel.add(driverField);
-        
-        panel.add(new JLabel("URL:"));
-        panel.add(urlField);
-        
-        panel.add(new JLabel("User:"));
-        panel.add(userField);
-        
-        panel.add(new JLabel("Password:"));
-        panel.add(passwordField);
-        
-        panel.add(new JLabel("Catalog:"));
-        panel.add(catalogField);
-        
-        panel.add(new JLabel("Schema:"));
-        panel.add(schemaField);
-        
-        panel.add(new JLabel("Excluded Fields:"));
-        panel.add(excludedFieldsField);
-        
-        panel.add(new JLabel("Excluded Tables:"));
-        panel.add(excludedTableField);
-
-        int result = JOptionPane.showConfirmDialog(
-            this,
-            panel,
-            (item == null ? "Create Database" : "Edit  Database"),
-            JOptionPane.OK_CANCEL_OPTION,
-            JOptionPane.PLAIN_MESSAGE
-        );
-
-        if (result == JOptionPane.OK_OPTION) {
-            
-            if(StringUtils.isBlank(nameField.getText().trim())){
-                return null;
-            }else{
-                if (item == null) {
-                    // Crear nuevo
-                    item = new DatabaseData();  
-                }  
-
-                // Actualizar existente
-                item.setName(nameField.getText().trim());
-                item.setDriver(driverField.getText().trim());
-                item.setUrl(urlField.getText().trim());
-                item.setUser(userField.getText().trim());
-                item.setPassword(passwordField.getText().trim());   
-                item.setCatalog(catalogField.getText().trim()); 
-                item.setSchema(schemaField.getText().trim());
-                item.setExcludedFields(excludedFieldsField.getText().trim());
-                item.setExcludedTables(excludedTableField.getText().trim());
-
-                return item;
-            }
-        }
-        return null; // Se canceló
-
-       
-    } */
 }
 

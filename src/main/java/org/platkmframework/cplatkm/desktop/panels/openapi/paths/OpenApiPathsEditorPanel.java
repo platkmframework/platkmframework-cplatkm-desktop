@@ -31,9 +31,9 @@ import org.platkmframework.cplatkm.desktop.commons.HttpStatus;
 import org.platkmframework.cplatkm.desktop.commons.editor.ComponentInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.EditComponentsInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.JTextPaneComponentInspector;
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.processor.data.openapi.CGPaths;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 
 /**
  *
@@ -249,8 +249,8 @@ public class OpenApiPathsEditorPanel extends javax.swing.JPanel {
 
     private void btnApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyActionPerformed
         try {
-            CGeneratorContentManager.getInstance().updateConfigFile();
-        } catch (CGeneratorException ex) {
+            CPlatkmContentManager.getInstance().updateConfigFile();
+        } catch (CPlatkmException ex) {
             Logger.getLogger(OpenApiPathsEditorPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnApplyActionPerformed
@@ -281,7 +281,7 @@ public class OpenApiPathsEditorPanel extends javax.swing.JPanel {
         
         
          
-        CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().stream().filter(o-> o.getId().equals(openApiParentId)).findFirst().orElse(null);
+        CPlatkmContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().stream().filter(o-> o.getId().equals(openApiParentId)).findFirst().orElse(null);
         this.cgPaths = pcgPaths;
         txtSummary.setText(cgPaths.getSummary());
         cmbMethod.setSelectedItem(HttpStatus.valueOf(cgPaths.getMethod().toUpperCase()).name());

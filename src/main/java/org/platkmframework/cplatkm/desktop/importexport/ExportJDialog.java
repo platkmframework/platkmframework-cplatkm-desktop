@@ -32,7 +32,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.desktop.core.MainTreeCreator;
 import org.platkmframework.cplatkm.desktop.commons.TreeNodeTypes;
 import org.platkmframework.cplatkm.desktop.tree.CGTreeNode;
@@ -43,7 +43,7 @@ import org.platkmframework.cplatkm.processor.data.DatabaseData;
 import org.platkmframework.cplatkm.processor.data.GlobalData;
 import org.platkmframework.cplatkm.processor.data.RunConfiguration;
 import org.platkmframework.cplatkm.processor.data.Template;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 import org.platkmframework.util.JsonException;
 import org.platkmframework.util.JsonUtil;
 import org.slf4j.Logger;
@@ -154,8 +154,8 @@ public class ExportJDialog extends javax.swing.JDialog {
             
             File exportFile;
             String exportFileName = "cgenetator_export_" + simpleDateFormat.format(new Date());
-            if(StringUtils.isNotBlank(CGeneratorContentManager.getInstance().getcGeneratorSettings().getLastExportPath())){
-                exportFile = new File(CGeneratorContentManager.getInstance().getcGeneratorSettings().getLastImportPath() + File.separator + exportFileName);
+            if(StringUtils.isNotBlank(CPlatkmContentManager.getInstance().getcGeneratorSettings().getLastExportPath())){
+                exportFile = new File(CPlatkmContentManager.getInstance().getcGeneratorSettings().getLastImportPath() + File.separator + exportFileName);
             }else{
                 exportFile = new File(exportFileName);
             }  
@@ -188,13 +188,13 @@ public class ExportJDialog extends javax.swing.JDialog {
                 CGTreeNode cgTreeNode = (CGTreeNode) treeExportImport.getModel().getRoot();
                 processImport(cgTreeNode);
                 if(this.canceledProcess) return; 
-                CGeneratorContentManager.getInstance().updateConfigFile();
-                CGeneratorContentManager.getInstance().getcGeneratorSettings().setLastImportPath(selectedFileFolder);
-                CGeneratorContentManager.getInstance().saveSetting();
+                CPlatkmContentManager.getInstance().updateConfigFile();
+                CPlatkmContentManager.getInstance().getcGeneratorSettings().setLastImportPath(selectedFileFolder);
+                CPlatkmContentManager.getInstance().saveSetting();
                 tareaResult.append("Import process done \n");
                 btnExport.setEnabled(false);
                 this.processDone = true;
-            } catch (CGeneratorException ex) {
+            } catch (CPlatkmException ex) {
                 java.util.logging.Logger.getLogger(ExportJDialog.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -251,13 +251,13 @@ public class ExportJDialog extends javax.swing.JDialog {
                         templateElemn.setRewritable(template.isRewritable());
                         templateElemn.setSuffix(template.getSuffix());
                         templateElemn.setTemplatename(template.getTemplatename());
-                        templateElemn.setContent(CGeneratorContentManager.getInstance().getTemplateContent(artifact.getFoldername(), template.getTemplatename()));
+                        templateElemn.setContent(CPlatkmContentManager.getInstance().getTemplateContent(artifact.getFoldername(), template.getTemplatename()));
                         
                         tareaResult.append("Template " + templateElemn.getLabel() + " \n");
                         
                         artifact.getTemplates().add(templateElemn);
                         
-                    } catch (CGeneratorException ex) {
+                    } catch (CPlatkmException ex) {
                         java.util.logging.Logger.getLogger(ExportJDialog.class.getName()).log(Level.SEVERE, null, ex);
                         tareaResult.append(ex.getMessage() + " \n");
                         this.canceledProcess = true;
@@ -285,13 +285,13 @@ public class ExportJDialog extends javax.swing.JDialog {
                 if(TreeNodeTypes.DATABASE_TYPE.name().equals(cgTreeNodeBaseChild.getType())){
                     
                     DatabaseData databaseData  = (DatabaseData) cgTreeNodeBaseChild.getUserObject();
-                    DatabaseData databaseData1 = CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatabases().stream().filter(d->d.getId().equals(databaseData.getId())).findFirst().orElse(null);
+                    DatabaseData databaseData1 = CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatabases().stream().filter(d->d.getId().equals(databaseData.getId())).findFirst().orElse(null);
                     if(databaseData1 == null){
-                        CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatabases().add(databaseData);
+                        CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatabases().add(databaseData);
                     }else{
-                        for (int i = 0; i < CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatabases().size(); i++) {
-                            if(CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatabases().get(i).getId().equals(databaseData1.getId())){
-                                CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatabases().set(i, databaseData);
+                        for (int i = 0; i < CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatabases().size(); i++) {
+                            if(CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatabases().get(i).getId().equals(databaseData1.getId())){
+                                CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatabases().set(i, databaseData);
                             }
                         }
                     }
@@ -299,13 +299,13 @@ public class ExportJDialog extends javax.swing.JDialog {
                 }else if(TreeNodeTypes.DATATYPE.name().equals(cgTreeNodeBaseChild.getType())){
                     
                     DataTypeMapping dataTypeMapping = (DataTypeMapping) cgTreeNodeBaseChild.getUserObject();
-                    DataTypeMapping dataTypeMapping1 = CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatatypes().stream().filter(d->d.getId().equals(dataTypeMapping.getId())).findFirst().orElse(null);
+                    DataTypeMapping dataTypeMapping1 = CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatatypes().stream().filter(d->d.getId().equals(dataTypeMapping.getId())).findFirst().orElse(null);
                     if(dataTypeMapping1 == null){
-                        CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatatypes().add(dataTypeMapping);
+                        CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatatypes().add(dataTypeMapping);
                     }else{
-                        for (int i = 0; i < CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatatypes().size(); i++) {
-                            if(CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatatypes().get(i).getId().equals(dataTypeMapping1.getId())){
-                                CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatatypes().set(i, dataTypeMapping);
+                        for (int i = 0; i < CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatatypes().size(); i++) {
+                            if(CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatatypes().get(i).getId().equals(dataTypeMapping1.getId())){
+                                CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatatypes().set(i, dataTypeMapping);
                             }
                         }
                     }
@@ -314,20 +314,20 @@ public class ExportJDialog extends javax.swing.JDialog {
                     
                     Artifact artifactSel = (Artifact) cgTreeNodeBaseChild.getUserObject();
                     artifactSel.getTemplates().clear();
-                    Artifact artifact1 = CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().stream().filter(d->d.getId().equals(artifactSel.getId())).findFirst().orElse(null);
+                    Artifact artifact1 = CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts().stream().filter(d->d.getId().equals(artifactSel.getId())).findFirst().orElse(null);
                     if(artifact1 == null){
-                        CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().add(artifactSel);
+                        CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts().add(artifactSel);
                     }else{
-                        for (int i = 0; i < CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().size(); i++) {
-                            if(CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().get(i).getId().equals(artifact1.getId())){
-                                artifact1 = CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().get(i);
+                        for (int i = 0; i < CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts().size(); i++) {
+                            if(CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts().get(i).getId().equals(artifact1.getId())){
+                                artifact1 = CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts().get(i);
                                 artifact1.setDescription(artifactSel.getDescription());
                                 artifact1.setFoldername(artifactSel.getFoldername());
                                 artifact1.setId(artifactSel.getId());
                                 artifact1.setLabel(artifactSel.getLabel());
                                 artifact1.setProperties(artifactSel.getProperties());
                                 artifact1.setTags(artifactSel.getTags());
-                                CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().set(i, artifact1);
+                                CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts().set(i, artifact1);
                             }
                         }
                     }
@@ -335,17 +335,17 @@ public class ExportJDialog extends javax.swing.JDialog {
                 }else if(TreeNodeTypes.TEMPLATE_TYPE.name().equals(cgTreeNodeBaseChild.getType())){
                     
                     String parentId    = cgTreeNodeBaseChild.getParentId();
-                    Artifact artifact  = CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().stream().filter(d->d.getId().equals(parentId)).findFirst().orElse(null);
+                    Artifact artifact  = CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts().stream().filter(d->d.getId().equals(parentId)).findFirst().orElse(null);
                     Template template  = (Template) cgTreeNodeBaseChild.getUserObject();
                     Template template1 = artifact.getTemplates().stream().filter(d->d.getId().equals(template.getId())).findFirst().orElse(null);
                     
                     if(template1 == null){
                         try {
-                            CGeneratorContentManager.getInstance().createTemplateFile(artifact.getFoldername(), template.getTemplatename());
-                            CGeneratorContentManager.getInstance().saveTemplateContent(artifact.getFoldername(), template.getTemplatename(), template.getContent());
+                            CPlatkmContentManager.getInstance().createTemplateFile(artifact.getFoldername(), template.getTemplatename());
+                            CPlatkmContentManager.getInstance().saveTemplateContent(artifact.getFoldername(), template.getTemplatename(), template.getContent());
                             template.setContent(null);
                             artifact.getTemplates().add(template);
-                        } catch (CGeneratorException ex) {
+                        } catch (CPlatkmException ex) {
                             java.util.logging.Logger.getLogger(ExportJDialog.class.getName()).log(Level.SEVERE, null, ex);
                             JOptionPane.showMessageDialog(this,
                         ex.getMessage(),
@@ -353,18 +353,18 @@ public class ExportJDialog extends javax.swing.JDialog {
                         }
                     }else{
                         try {
-                            CGeneratorContentManager.getInstance().saveTemplateContent(artifact.getFoldername(), template.getTemplatename(), template.getContent());
+                            CPlatkmContentManager.getInstance().saveTemplateContent(artifact.getFoldername(), template.getTemplatename(), template.getContent());
                             
                             for (int i = 0; i < artifact.getTemplates().size(); i++) {
                                 if(artifact.getTemplates().get(i).getId().equals(template.getId())){
                                     
                                     artifact.getTemplates().set(i, template);
-                                    CGeneratorContentManager.getInstance().saveTemplateContent(artifact.getFoldername(), template.getTemplatename(), template.getContent());
+                                    CPlatkmContentManager.getInstance().saveTemplateContent(artifact.getFoldername(), template.getTemplatename(), template.getContent());
                                     template.setContent(null);
                                 }
                             }
                             
-                        } catch (CGeneratorException ex) {
+                        } catch (CPlatkmException ex) {
                             java.util.logging.Logger.getLogger(ExportJDialog.class.getName()).log(Level.SEVERE, null, ex); java.util.logging.Logger.getLogger(ExportJDialog.class.getName()).log(Level.SEVERE, null, ex);
                             JOptionPane.showMessageDialog(this,
                         ex.getMessage(),
@@ -376,13 +376,13 @@ public class ExportJDialog extends javax.swing.JDialog {
                 }else if(TreeNodeTypes.RUN_CONFIGURATION_TYPE.name().equals(cgTreeNodeBaseChild.getType())){
                     
                     RunConfiguration runConfiguration  = (RunConfiguration) cgTreeNodeBaseChild.getUserObject();
-                    RunConfiguration runConfiguration1 = CGeneratorContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().stream().filter(d->d.getId().equals(runConfiguration.getId())).findFirst().orElse(null);
+                    RunConfiguration runConfiguration1 = CPlatkmContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().stream().filter(d->d.getId().equals(runConfiguration.getId())).findFirst().orElse(null);
                     if(runConfiguration1 == null){
-                        CGeneratorContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().add(runConfiguration);
+                        CPlatkmContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().add(runConfiguration);
                     }else{
-                        for (int i = 0; i < CGeneratorContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().size(); i++) {
-                            if(CGeneratorContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().get(i).getId().equals(runConfiguration1.getId())){
-                                CGeneratorContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().set(i, runConfiguration);
+                        for (int i = 0; i < CPlatkmContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().size(); i++) {
+                            if(CPlatkmContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().get(i).getId().equals(runConfiguration1.getId())){
+                                CPlatkmContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().set(i, runConfiguration);
                             }
                         }
                     }
@@ -390,13 +390,13 @@ public class ExportJDialog extends javax.swing.JDialog {
                 }else if(TreeNodeTypes.GLOBAL_DATA_TYPE.name().equals(cgTreeNodeBaseChild.getType())){
                     
                     GlobalData globalData  = (GlobalData) cgTreeNodeBaseChild.getUserObject();
-                    GlobalData globalData1 = CGeneratorContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().stream().filter(d->d.getId().equals(globalData.getId())).findFirst().orElse(null);
+                    GlobalData globalData1 = CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().stream().filter(d->d.getId().equals(globalData.getId())).findFirst().orElse(null);
                     if(globalData1 == null){
-                        CGeneratorContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().add(globalData);
+                        CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().add(globalData);
                     }else{
-                        for (int i = 0; i < CGeneratorContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().size(); i++) {
-                            if(CGeneratorContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().get(i).getId().equals(globalData1.getId())){
-                                CGeneratorContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().set(i, globalData);
+                        for (int i = 0; i < CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().size(); i++) {
+                            if(CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().get(i).getId().equals(globalData1.getId())){
+                                CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().set(i, globalData);
                             }
                         }
                     }
@@ -497,8 +497,8 @@ public class ExportJDialog extends javax.swing.JDialog {
             String strJson = JsonUtil.objectToJson(this.cgenetatorConfigExport );
             FileUtils.write(file, strJson, "UTF-8");
             
-            CGeneratorContentManager.getInstance().getcGeneratorSettings().setLastExportPath(file.getParent());
-            CGeneratorContentManager.getInstance().saveSetting();
+            CPlatkmContentManager.getInstance().getcGeneratorSettings().setLastExportPath(file.getParent());
+            CPlatkmContentManager.getInstance().saveSetting();
  
             JOptionPane.showMessageDialog(this,
                         "File exported",

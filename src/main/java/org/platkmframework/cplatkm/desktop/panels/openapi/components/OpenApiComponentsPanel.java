@@ -90,104 +90,24 @@ public final class OpenApiComponentsPanel extends JPanel {
     }
 
     public void refreshTable() {
-    /**    tableModel.setRowCount(0);
-        for (CGOpenAPI gd : CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs()) {
-            Object[] rowData = {
-                gd.getInfo().getTitle()
-            };
-            tableModel.addRow(rowData);
-        }*/
+ 
     }
 
     private void createDateType() {
-      /**  CGOpenAPI newItem = showArtifactDialog(null);
-        if (newItem != null) {
-            newItem.setId(Util.randomAlfaNumericString(255)); 
-            try {
-            
-                CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().add(newItem);
-                refreshTable();
-                CGeneratorContentManager.getInstance().refreshGlobalDataSeparator();  
-                
-                CGeneratorContentManager.getInstance().updateConfigFile();
-                
-            } catch (CGeneratorException ex) {
-                Logger.getLogger(OpenApiComponentsPanel.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(this,
-                ex.getMessage(),
-                "Create", JOptionPane.WARNING_MESSAGE);
-            }
-        }*/
+      
     }
 
     private void editDataType() {
-       /** int selectedRow = table.getSelectedRow();
-        if (selectedRow >= 0) {
-            CGOpenAPI  current = CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().get(selectedRow);
-            CGOpenAPI  updated = showArtifactDialog(current);
-            if (updated != null) {
-                try {
-                    CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().set(selectedRow, updated);
-                    refreshTable();
-                    CGeneratorContentManager.getInstance().refreshGlobalDataSeparator();
-                
-                    CGeneratorContentManager.getInstance().updateConfigFile();
-                } catch (CGeneratorException ex) {
-                    Logger.getLogger(OpenApiComponentsPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(this,
-                    ex.getMessage(),
-                    "Edit", JOptionPane.WARNING_MESSAGE);
-                }
-            }
-        } else {
-            JOptionPane.showMessageDialog(this,
-                "You should select a record to update.",
-                "Edit", JOptionPane.WARNING_MESSAGE);
-        }*/
+ 
     }
 
     private void deleteDataType() {
-   /**     int selectedRow = table.getSelectedRow();
-        if (selectedRow >= 0) {
-            
-            int response = JOptionPane.showConfirmDialog(null, 
-                "Are you sure you want to delete this record?", "Delete Confirmation", 
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-             
-            if (response == JOptionPane.YES_OPTION) { 
-                try {
-                    CGeneratorConfigManager.getInstance().getCgenetatorConfig().getOpenAPIs().remove(selectedRow);
-                    refreshTable();
-                    CGeneratorConfigManager.getInstance().refreshOpenAPISeparator();
-
-                    CGeneratorConfigManager.getInstance().updateConfigFile();
-                } catch (CGeneratorException ex) {
-                    Logger.getLogger(OpenApiComponentsPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(this,
-                    ex.getMessage(),
-                    "Delete Conformation", JOptionPane.WARNING_MESSAGE);
-                }
-            }
-        } else {
-            JOptionPane.showMessageDialog(this,
-                "You should select a record to  delete.",
-                "Delete", JOptionPane.WARNING_MESSAGE);
-        }*/
+   
     }
 
     
     private CGOpenAPI showArtifactDialog(CGOpenAPI item) {
-       /**   if(openApiDialog == null)  
-            openApiDialog = new OpenApiDialog( CGeneratorConfigManager.getInstance().getMainFrame(), true);
-        
-        openApiDialog.setLocationRelativeTo(CGeneratorConfigManager.getInstance().getMainFrame());    
-        openApiDialog.setData(item);
-        openApiDialog.setVisible(true);
-        
-        if(openApiDialog.isUpdated()) 
-            return openApiDialog.getCGOpenAPI(); 
-        else 
-            return null;*/
+ 
        return null;
     }
    

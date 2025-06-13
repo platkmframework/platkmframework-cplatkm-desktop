@@ -20,16 +20,19 @@
  */
 package org.platkmframework.cplatkm.desktop.panels.runconfigurations;
 
+import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager; 
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager; 
 import org.platkmframework.cplatkm.desktop.core.components.table.button.BasicButtonAction;
 import org.platkmframework.cplatkm.desktop.core.components.table.button.ButtonsEditor;
 import org.platkmframework.cplatkm.desktop.core.components.table.button.ButtonsPanel;
@@ -39,6 +42,7 @@ import org.platkmframework.cplatkm.processor.data.Artifact;
 import org.platkmframework.cplatkm.processor.data.RunConfigArtifact;
 import org.platkmframework.cplatkm.processor.data.RunConfigTemplate;
 import org.platkmframework.cplatkm.processor.data.Template;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 
 /**
  *
@@ -61,8 +65,8 @@ public class RunConfigArtifactTemplatesDialog extends javax.swing.JDialog {
         initComponents();
        setLocationRelativeTo(null);
        
-        templateEditorDialog = new RunConfigPropertiesEditorDialog(CGeneratorContentManager.getInstance().getMainFrame(),true);
-        runConfigTemplatePathJDialog = new RunConfigTemplatePathJDialog(CGeneratorContentManager.getInstance().getMainFrame(),true);
+        templateEditorDialog = new RunConfigPropertiesEditorDialog(this, "", Dialog.ModalityType.DOCUMENT_MODAL);
+        runConfigTemplatePathJDialog = new RunConfigTemplatePathJDialog(this, "", Dialog.ModalityType.DOCUMENT_MODAL);
         
         tableDataModel = new DefaultTableModel(new String[] {"Name", "Description", "Active", "Apply Only With Tags","Properties", "Relative Path"}, 0){
             @Override
@@ -96,7 +100,7 @@ public class RunConfigArtifactTemplatesDialog extends javax.swing.JDialog {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = tableData.getSelectedRow();
                 if (selectedRow >=0) {
-                    templateEditorDialog.setLocationRelativeTo(CGeneratorContentManager.getInstance().getMainFrame());
+                    templateEditorDialog.setLocationRelativeTo(CPlatkmContentManager.getInstance().getMainFrame());
                     templateEditorDialog.setData(runConfigArtifact.getTemplates().get(selectedRow).getProperties());
                     templateEditorDialog.setVisible(true);  
 
@@ -122,7 +126,7 @@ public class RunConfigArtifactTemplatesDialog extends javax.swing.JDialog {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = tableData.getSelectedRow();
                 if (selectedRow >=0) {
-                    runConfigTemplatePathJDialog.setLocationRelativeTo(CGeneratorContentManager.getInstance().getMainFrame());
+                    runConfigTemplatePathJDialog.setModal(true); 
                     runConfigTemplatePathJDialog.setData(rootPath, runConfigArtifact.getTemplates().get(selectedRow).getRelativePath());
                     runConfigTemplatePathJDialog.setVisible(true);  
 
@@ -354,22 +358,34 @@ public class RunConfigArtifactTemplatesDialog extends javax.swing.JDialog {
      private void refreshTableData() {
         tableDataModel.setRowCount(0);
         Template template;
-        Artifact artifact = CGeneratorContentManager.getInstance().getCgenetatorConfig().getArtifacts().stream().filter(a->a.getId().equals(runConfigArtifact.getArtifactId())).findFirst().orElse(null);
+        Artifact artifact = CPlatkmContentManager.getInstance().getCgenetatorConfig().getArtifacts().stream().filter(a->a.getId().equals(runConfigArtifact.getArtifactId())).findFirst().orElse(null);
         lblArtifactName.setText(artifact.getLabel());
         
+        List<RunConfigTemplate> removed = new ArrayList<>();
         for (RunConfigTemplate runtConfigTemplate : this.runConfigArtifact.getTemplates()) {
-           
-            template = artifact.getTemplates().stream().filter(t-> t.getId().equals(runtConfigTemplate.getId())).findFirst().orElse(null);
             
-            Object[] rowData = {
-                template.getLabel(),
-                template.getDescription(), 
-                runtConfigTemplate.isActive(),
-                runtConfigTemplate.isApplyOnlyWithTags(),
-                "",
-                ""
-            };
-            tableDataModel.addRow(rowData);
+            template = artifact.getTemplates().stream().filter(t-> t.getId().equals(runtConfigTemplate.getId())).findFirst().orElse(null);
+
+            if(template == null)
+                removed.add(runtConfigTemplate);
+            else{
+                Object[] rowData = {
+                    template.getLabel(),
+                    template.getDescription(),
+                    runtConfigTemplate.isActive(),
+                    runtConfigTemplate.isApplyOnlyWithTags(),
+                    "",
+                    ""
+                };
+                tableDataModel.addRow(rowData);
+            }
+        }
+        
+        try {
+            this.runConfigArtifact.getTemplates().removeAll(removed);
+            CPlatkmContentManager.getInstance().updateConfigFile();
+        } catch (CPlatkmException ex) {
+            Logger.getLogger(RunConfigArtifactTemplatesDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

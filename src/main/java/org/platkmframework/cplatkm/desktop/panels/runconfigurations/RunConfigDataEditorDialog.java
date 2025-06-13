@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 import javax.swing.JColorChooser;
 import javax.swing.JOptionPane; 
 import org.apache.commons.lang3.StringUtils;
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.processor.data.DataTypes;
 import org.platkmframework.cplatkm.processor.data.GlobalData;
 import org.platkmframework.cplatkm.processor.data.RunConfigData;
@@ -54,7 +54,7 @@ public class RunConfigDataEditorDialog extends javax.swing.JDialog {
     public RunConfigDataEditorDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        setLocationRelativeTo(CGeneratorContentManager.getInstance().getMainFrame());
+        setLocationRelativeTo(CPlatkmContentManager.getInstance().getMainFrame());
         
         increaseFontSizeButton.addActionListener(e -> {
             Font currentFont = textPane.getFont();
@@ -67,7 +67,7 @@ public class RunConfigDataEditorDialog extends javax.swing.JDialog {
         });
         
         colorButton.addActionListener(e -> {
-            Color selectedColor = JColorChooser.showDialog(CGeneratorContentManager.getInstance().getMainFrame(), "Elige un color", Color.BLACK);
+            Color selectedColor = JColorChooser.showDialog(CPlatkmContentManager.getInstance().getMainFrame(), "Elige un color", Color.BLACK);
             if (selectedColor != null) {
                 textPane.setForeground(selectedColor);
             }
@@ -273,7 +273,7 @@ public class RunConfigDataEditorDialog extends javax.swing.JDialog {
             
                 if (result == JOptionPane.YES_OPTION) {
                     String globalDataId = Util.randomAlfaNumericString(255);
-                    CGeneratorContentManager.getInstance().addGlobalData(
+                    CPlatkmContentManager.getInstance().addGlobalData(
                             globalDataId,
                             this.runConfigData.getCode(),
                             this.runConfigData.getName(),
@@ -285,7 +285,7 @@ public class RunConfigDataEditorDialog extends javax.swing.JDialog {
                 }
             }else{
                 if(checkConverToGlobalData.isSelected()){
-                    CGeneratorContentManager.getInstance().updateGlobalData(
+                    CPlatkmContentManager.getInstance().updateGlobalData(
                             this.runConfigData.getRefId(), 
                             this.runConfigData.getCode(),
                             this.runConfigData.getName(),
@@ -399,7 +399,7 @@ public class RunConfigDataEditorDialog extends javax.swing.JDialog {
             ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
             String formattedJson;
             if(checkConverToGlobalData.isSelected()){
-                GlobalData globalData = CGeneratorContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().stream().filter(gd-> gd.getId().equals(this.runConfigData.getRefId())).findFirst().orElse(null);
+                GlobalData globalData = CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().stream().filter(gd-> gd.getId().equals(this.runConfigData.getRefId())).findFirst().orElse(null);
                 if(globalData == null){
                     globalData = new GlobalData();
                     globalData.setId(Util.randomAlfaNumericString(255));

@@ -24,12 +24,14 @@ package org.platkmframework.cplatkm.desktop.panels.runconfigurations;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import java.awt.Dialog;
+import java.awt.Window;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane; 
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 
 /**
  *
@@ -41,12 +43,16 @@ public class RunConfigPropertiesEditorDialog extends javax.swing.JDialog {
     public  Map<String, String> mapData;
 
     /**
-     * Creates new form TemplateEditorDialog
+     * 
+     * @param owner
+     * @param title
+     * @param modalityType 
      */
-    public RunConfigPropertiesEditorDialog(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public RunConfigPropertiesEditorDialog(Window owner, String title, ModalityType modalityType) {
+        super(owner, title, modalityType);
         initComponents();
-        setLocationRelativeTo(CGeneratorContentManager.getInstance().getMainFrame());
+        setLocationRelativeTo(CPlatkmContentManager.getInstance().getMainFrame());
+        setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
     }
 
     /**
@@ -120,54 +126,6 @@ public class RunConfigPropertiesEditorDialog extends javax.swing.JDialog {
 
     }//GEN-LAST:event_btnSaveActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(RunConfigPropertiesEditorDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(RunConfigPropertiesEditorDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(RunConfigPropertiesEditorDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(RunConfigPropertiesEditorDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                RunConfigPropertiesEditorDialog dialog = new RunConfigPropertiesEditorDialog(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSave;

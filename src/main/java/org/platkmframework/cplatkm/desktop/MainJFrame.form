@@ -87,7 +87,7 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
-    <Property name="title" type="java.lang.String" value="CGenerator"/>
+    <Property name="title" type="java.lang.String" value="CPLATKM"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="jMenuBar1"/>
@@ -173,7 +173,7 @@
                     <Component class="javax.swing.JTree" name="treeProject">
                       <Properties>
                         <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.editors2.TreeModelEditor">
-                          <TreeModel code="CGenerator&#xa; Databases&#xa;  db1&#xa;  db2&#xa; Artifacts&#xa;  artifact1&#xa;    template1&#xa;    template2&#xa;  artifact2&#xa;  artifact3&#xa;    template31&#xa;    template32&#xa;  artifact4&#xa; Run Configurations"/>
+                          <TreeModel code="CPLATKM&#xa; Databases&#xa;  db1&#xa;  db2&#xa; Artifacts&#xa;  artifact1&#xa;    template1&#xa;    template2&#xa;  artifact2&#xa;  artifact3&#xa;    template31&#xa;    template32&#xa;  artifact4&#xa; Run Configurations"/>
                         </Property>
                       </Properties>
                       <Events>

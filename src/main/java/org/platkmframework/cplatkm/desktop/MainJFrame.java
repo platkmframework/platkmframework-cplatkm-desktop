@@ -25,7 +25,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.tree.TreePath; 
  
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.desktop.tree.CGTreeNode;
 import org.platkmframework.cplatkm.desktop.panels.artifacts.ArtifactPanel;
 import org.platkmframework.cplatkm.desktop.panels.DatabasePanel;
@@ -33,7 +33,7 @@ import org.platkmframework.cplatkm.desktop.panels.runconfigurations.RunConfigura
 import org.platkmframework.cplatkm.desktop.panels.artifacts.TemplateCodeEditorJPanel;
 import org.platkmframework.cplatkm.desktop.panels.artifacts.TemplatesPanel; 
 import org.platkmframework.cplatkm.desktop.panels.datatype.DataTypePanel;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 import org.platkmframework.util.JsonUtil;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -122,6 +122,10 @@ public class MainJFrame extends javax.swing.JFrame {
     private final OpenApiEditorPanel openApiEditorPanel;
     private final OpenAPIsPanel  openAPIsPanel;
     
+    private final OpenRepositoryDialog openRepositoryDialog;
+    
+    private final NewWorkSpaceDialog newWorkSpaceDialog;
+    
     /**private final OpenTagsPanel openTagsPanel;
     private final OpenTagsDialog openTagsDialog;
    
@@ -141,8 +145,8 @@ public class MainJFrame extends javax.swing.JFrame {
         ImageIcon icon = new ImageIcon(MainJFrame.class.getResource("/images/cgenerator_small.png"));
         setIconImage(icon.getImage());
         
-        CGeneratorContentManager.getInstance().setContentTypes(ContentTypeReader.read()); 
-        CGeneratorContentManager.getInstance().setDefaultOpenApi(DefaultOpenApiReader.read());
+        CPlatkmContentManager.getInstance().setContentTypes(ContentTypeReader.read()); 
+        CPlatkmContentManager.getInstance().setDefaultOpenApi(DefaultOpenApiReader.read());
         
         fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -169,19 +173,16 @@ public class MainJFrame extends javax.swing.JFrame {
         globalDataEditorPanel = new GlobalDataEditorPanel();
         globalDataPanel = new GlobalDataPanel(globalDataEditorPanel, scrollPaneMain);
         
-        propertiesJDialog = new PropertiesJDialog(CGeneratorContentManager.getInstance().getMainFrame(), true);
+        propertiesJDialog = new PropertiesJDialog(CPlatkmContentManager.getInstance().getMainFrame(), true);
         
-        exportJDialog = new ExportJDialog(CGeneratorContentManager.getInstance().getMainFrame(), true);
+        exportJDialog = new ExportJDialog(CPlatkmContentManager.getInstance().getMainFrame(), true);
         
         openApiEditorPanel = new OpenApiEditorPanel();
         openAPIsPanel = new OpenAPIsPanel(openApiEditorPanel, scrollPaneMain);
         
-        /**openTagsDialog = new OpenTagsDialog(CGeneratorContentManager.getInstance().getMainFrame(), true);
-        openTagsPanel = new OpenTagsPanel();
+        openRepositoryDialog = new OpenRepositoryDialog(CPlatkmContentManager.getInstance().getMainFrame(), true);
         
-        openApiPathsPanel = new OpenApiPathsPanel();
-        openApiPathsEditorPanel = new OpenApiPathsEditorPanel();
-        */
+        newWorkSpaceDialog = new NewWorkSpaceDialog(CPlatkmContentManager.getInstance().getMainFrame(), true);
         
         loadInitConfiguration(); 
         
@@ -219,11 +220,11 @@ public class MainJFrame extends javax.swing.JFrame {
         subMenuImportOpenApi = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("CGenerator");
+        setTitle("CPLATKM");
 
         jSplitPane1.setDividerLocation(140);
 
-        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("CGenerator");
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("CPLATKM");
         javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Databases");
         javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("db1");
         treeNode2.add(treeNode3);
@@ -360,7 +361,7 @@ public class MainJFrame extends javax.swing.JFrame {
 
     private void treeProjectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_treeProjectMouseClicked
        
-        if(CGeneratorContentManager.getInstance().isActive()){
+        if(CPlatkmContentManager.getInstance().isActive()){
             // Obtener la ubicación del clic
             int x = evt.getX();
             int y = evt.getY();
@@ -376,12 +377,12 @@ public class MainJFrame extends javax.swing.JFrame {
 
                     if(TreeNodeTypes.DATABASE_TYPE.name().equals(nodoSeleccionado.getType())){
                        if(nodoSeleccionado.getUserObject() instanceof DatabaseData databaseData){
-                           DatabaseData databaseDataFound =    CGeneratorContentManager.getInstance().
+                           DatabaseData databaseDataFound =    CPlatkmContentManager.getInstance().
                                    getCgenetatorConfig().
                                    getDatabases().stream().filter(d-> d.getId().equals(databaseData.getId())).findFirst().orElse(null);
 
                         if(databaseDataFound != null){
-                            //dataBaseJDialog.setLocationRelativeTo(CGeneratorContentManager.getInstance().getMainFrame()); 
+                            //dataBaseJDialog.setLocationRelativeTo(CPlatkmContentManager.getInstance().getMainFrame()); 
                             dataBaseEditorPanel.setData(databaseDataFound);
                             scrollPaneMain.setViewportView(dataBaseEditorPanel);  
                            
@@ -389,7 +390,7 @@ public class MainJFrame extends javax.swing.JFrame {
                        }
                     }else if(TreeNodeTypes.DATATYPE.name().equals(nodoSeleccionado.getType())){
                         if(nodoSeleccionado.getUserObject() instanceof DataTypeMapping dataTypeMapping){
-                            DataTypeMapping dataTypeMappingFound =  CGeneratorContentManager.getInstance().
+                            DataTypeMapping dataTypeMappingFound =  CPlatkmContentManager.getInstance().
                                    getCgenetatorConfig().
                                    getDatatypes().stream().filter(dt-> dt.getId().equals(dataTypeMapping.getId())).findFirst().orElse(null);
                             
@@ -399,7 +400,7 @@ public class MainJFrame extends javax.swing.JFrame {
                         }
                     }else if(TreeNodeTypes.ARTIFACT_TYPE.name().equals(nodoSeleccionado.getType())){
                         if(nodoSeleccionado.getUserObject() instanceof Artifact  artifact){
-                            Artifact artifactFound =  CGeneratorContentManager.getInstance().
+                            Artifact artifactFound =  CPlatkmContentManager.getInstance().
                                    getCgenetatorConfig().
                                    getArtifacts().stream().filter(db-> db.getId().equals(artifact.getId())).findFirst().orElse(null);
 
@@ -409,7 +410,7 @@ public class MainJFrame extends javax.swing.JFrame {
                         }
                     }else if(TreeNodeTypes.RUN_CONFIGURATION_TYPE.name().equals(nodoSeleccionado.getType())){
                         if(nodoSeleccionado.getUserObject() instanceof RunConfiguration runConfiguration){
-                            RunConfiguration runConfigurationFound =  CGeneratorContentManager.getInstance().
+                            RunConfiguration runConfigurationFound =  CPlatkmContentManager.getInstance().
                                    getCgenetatorConfig().
                                    getRunConfigurations().stream().filter(rc-> rc.getId().equals(runConfiguration.getId())).findFirst().orElse(null);
                             
@@ -421,7 +422,7 @@ public class MainJFrame extends javax.swing.JFrame {
                         }
                     }else if(TreeNodeTypes.GLOBAL_DATA_TYPE.name().equals(nodoSeleccionado.getType())){
                         if(nodoSeleccionado.getUserObject() instanceof GlobalData globalData){
-                            GlobalData globalDataMappingFound =  CGeneratorContentManager.getInstance().
+                            GlobalData globalDataMappingFound =  CPlatkmContentManager.getInstance().
                                    getCgenetatorConfig().getGlobalDatas()
                                     .stream().filter(dt-> dt.getId().equals(globalData.getId())).findFirst().orElse(null);
 
@@ -432,80 +433,16 @@ public class MainJFrame extends javax.swing.JFrame {
                         }
                     }else if(TreeNodeTypes.OPEN_API_TYPE.name().equals(nodoSeleccionado.getType())){
                         if(nodoSeleccionado.getUserObject() instanceof OpenApiImported openApiImported){
-                            OpenApiImported openApiImportedFound =  CGeneratorContentManager.getInstance().
+                            OpenApiImported openApiImportedFound =  CPlatkmContentManager.getInstance().
                                    getCgenetatorConfig().getOpenAPIs()
                                     .stream().filter(dt-> dt.getId().equals(openApiImported.getId())).findFirst().orElse(null);
                             
                             
                             openApiEditorPanel.setData(openApiImportedFound);
                             scrollPaneMain.setViewportView(openApiEditorPanel);
-                            /*
-
-                            openApiDialog.setLocationRelativeTo(CGeneratorContentManager.getInstance().getMainFrame());    
-                            openApiDialog.setData(cgOpenAPIFound);
-                            openApiDialog.setVisible(true);
-
-                            if(openApiDialog.isUdpdated()){
-
-                                for (int i = 0; i < CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().size(); i++) {
-                                    if (CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().get(i).getId().equals(openApiDialog.getItem().getId())) {
-                                        CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().set(i, openApiDialog.getItem());
-                                        break;
-                                    }
-                                }
-
-                                try {
-                                    CGeneratorContentManager.getInstance().refreshOpenAPISeparator();
-                                    openAPIsPanel.refreshTable();
-                                    CGeneratorContentManager.getInstance().updateConfigFile();
-                                } catch (CGeneratorException ex) {
-                                    java.util.logging.Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
-                                    JOptionPane.showMessageDialog(this,
-                                    ex.getMessage(),
-                                    "Edit", JOptionPane.WARNING_MESSAGE);
-                                }
-                            }*/
+                           
                         }
-                    }/*else if(TreeNodeTypes.OPEN_API_TAG_TYPE.name().equals(nodoSeleccionado.getType())){
-                        if(nodoSeleccionado.getUserObject() instanceof CGTags cgTags){
-                             
-                                    
-                            OpenApiImported openApiImported = CGeneratorContentManager.getInstance().
-                                   getCgenetatorConfig().getOpenAPIs()
-                                    .stream().filter(dt-> dt.getId().equals(nodoSeleccionado.getParentId())).findFirst().orElse(null);
-
-                            CGTags cgTagFound = cgOpenAPI.getTags().stream().filter(t-> t.getId().equals(cgTags.getId())).findFirst().orElse(null);
-                            openTagsDialog.setLocationRelativeTo(CGeneratorContentManager.getInstance().getMainFrame());    
-                            openTagsDialog.setData(cgTagFound);
-                            openTagsDialog.setVisible(true);
-
-                            if(openTagsDialog.isUdpdated()){
-
-                                for (int i = 0; i < CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().size(); i++) {
-                                    if (CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().get(i).getId().equals(cgOpenAPI.getId())) {
-                                        for (int j = 0; j < CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().get(i).getTags().size(); j++) {
-                                            if(CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().get(i).getTags().get(j).getId().equals(openTagsDialog.getItem().getId())) {
-                                                CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().get(i).getTags().set(j, openTagsDialog.getItem());
-                                                break;
-                                            }
-                                        } 
-                                        break; 
-                                    }
-                                }
-
-                                try {
-                                    CGeneratorContentManager.getInstance().refreshOpenAPITagsSeparator(cgOpenAPI);
-                                    openTagsPanel.refreshTable();
-                                    CGeneratorContentManager.getInstance().updateConfigFile();
-                                } catch (CGeneratorException ex) {
-                                    java.util.logging.Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
-                                    JOptionPane.showMessageDialog(this,
-                                    ex.getMessage(),
-                                    "Edit", JOptionPane.WARNING_MESSAGE);
-                                }
-                            }
-                        }
-                    }*/
+                    } 
                 }
             }else{
                 // Obtener la fila en la ubicación del clic
@@ -528,7 +465,7 @@ public class MainJFrame extends javax.swing.JFrame {
                         scrollPaneMain.setViewportView(dataTypePanel);
                      }else if(TreeNodeTypes.TEMPLATE_SEPARATOR_TYPE.name().equals(type)){
 
-                         Artifact artifact = CGeneratorContentManager.getInstance().getCgenetatorConfig().
+                         Artifact artifact = CPlatkmContentManager.getInstance().getCgenetatorConfig().
                                  getArtifacts().
                                  stream().filter(a-> a.getId().equals(nodoSeleccionado.getParentId())).findFirst().orElse(null);
                         
@@ -541,14 +478,14 @@ public class MainJFrame extends javax.swing.JFrame {
                         scrollPaneMain.setViewportView(runConfigurationPanel);                 
                     }else if(TreeNodeTypes.TEMPLATE_TYPE.name().equals(type)){
                         try {
-                            Artifact artifact = CGeneratorContentManager.getInstance().getCgenetatorConfig().
+                            Artifact artifact = CPlatkmContentManager.getInstance().getCgenetatorConfig().
                                     getArtifacts().
                                     stream().filter(a-> a.getId().equals(((CGTreeNode)nodoSeleccionado.getParent()).getParentId())).findFirst().orElse(null);
 
                            templateCodeEditorJPanel.setTemplate(artifact.getFoldername(),(Template)nodoSeleccionado.getUserObject());
                            scrollPaneMain.setViewportView(templateCodeEditorJPanel);
 
-                        } catch (CGeneratorException ex) {
+                        } catch (CPlatkmException ex) {
                             logger.error(ex.getMessage());
                             JOptionPane.showMessageDialog(this,
                                     ex.getMessage(),
@@ -560,19 +497,7 @@ public class MainJFrame extends javax.swing.JFrame {
                     }else if(TreeNodeTypes.OPEN_API_SEPARATOR_TYPE.name().equals(type)){
                         openAPIsPanel.refreshTable();
                         scrollPaneMain.setViewportView(openAPIsPanel);                    
-                    }
-                    /*else if(TreeNodeTypes.OPEN_API_TAG_SEPARATOR_TYPE.name().equals(type)){
-                        openTagsPanel.refreshTableFromtable(nodoSeleccionado.getParentId());
-                        scrollPaneMain.setViewportView(openTagsPanel);                    
-                    }else if(TreeNodeTypes.OPEN_API_PATHS_SEPARATOR_TYPE.name().equals(type)){
-                        openApiPathsPanel.refreshTableFromtable(((CGTreeNode)nodoSeleccionado.getParent()).getParentId(), nodoSeleccionado.getParentId());
-                        scrollPaneMain.setViewportView(openApiPathsPanel);                    
-                    }else if(TreeNodeTypes.OPEN_API_PATHS_TYPE.name().equals(type)){
-                        //openApiPathsPanel.refreshTableFromtable(((CGTreeNode)nodoSeleccionado.getParent()).getParentId(), nodoSeleccionado.getParentId());
-                        openApiPathsEditorPanel.refreshData(nodoSeleccionado.getParentId(),
-                                (CGPaths)nodoSeleccionado.getUserObject());
-                        scrollPaneMain.setViewportView(openApiPathsEditorPanel);                    
-                    }*/
+                    } 
                 }        
             }
         }
@@ -583,15 +508,15 @@ public class MainJFrame extends javax.swing.JFrame {
 
     private void subMenuImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subMenuImportActionPerformed
        
-        if(StringUtils.isNotBlank(CGeneratorContentManager.getInstance().getcGeneratorSettings().getLastImportPath())){
-            File defaultDirectory = new File(CGeneratorContentManager.getInstance().getcGeneratorSettings().getLastImportPath());
+        if(StringUtils.isNotBlank(CPlatkmContentManager.getInstance().getcGeneratorSettings().getLastImportPath())){
+            File defaultDirectory = new File(CPlatkmContentManager.getInstance().getcGeneratorSettings().getLastImportPath());
             fileChooser.setCurrentDirectory(defaultDirectory);
         }
         int result = fileChooser.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             if(selectedFile.isFile() && selectedFile.exists()){
-                exportJDialog.setLocationRelativeTo(CGeneratorContentManager.getInstance().getMainFrame());
+                exportJDialog.setLocationRelativeTo(CPlatkmContentManager.getInstance().getMainFrame());
                     try {
                         
                         TypeToken<CGenetatorConfig> type = new TypeToken<CGenetatorConfig>() {};
@@ -609,54 +534,98 @@ public class MainJFrame extends javax.swing.JFrame {
                                 ex.getMessage(),
                                 "Import", JOptionPane.ERROR_MESSAGE);
                     } 
-                    // load usado el load de manager o algo parecido y pasar el cgenerator config como parametro
-                    //       -recuerda hay un ejemplo de arbol con checkbox 
-                    // load usado el load de manager o algo parecido y pasar el cgenerator config como parametro
-                    //       -recuerda hay un ejemplo de arbol con checkbox
                 
             }
         }
     }//GEN-LAST:event_subMenuImportActionPerformed
 
     private void subMenuExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subMenuExportActionPerformed
-        exportJDialog.setLocationRelativeTo(CGeneratorContentManager.getInstance().getMainFrame());
+        exportJDialog.setLocationRelativeTo(CPlatkmContentManager.getInstance().getMainFrame());
         
         File defaultDirectory; 
-         if(StringUtils.isNotBlank(CGeneratorContentManager.getInstance().getcGeneratorSettings().getLastExportPath())){
-            defaultDirectory = new File(CGeneratorContentManager.getInstance().getcGeneratorSettings().getLastExportPath());
+         if(StringUtils.isNotBlank(CPlatkmContentManager.getInstance().getcGeneratorSettings().getLastExportPath())){
+            defaultDirectory = new File(CPlatkmContentManager.getInstance().getcGeneratorSettings().getLastExportPath());
             fileChooser.setCurrentDirectory(defaultDirectory);
         }else{
             defaultDirectory = new File("");
         }
          
-        exportJDialog.openAction(ExportImportEnum.EXPORT, CGeneratorContentManager.getInstance().getCgenetatorConfig(), defaultDirectory);
+        exportJDialog.openAction(ExportImportEnum.EXPORT, CPlatkmContentManager.getInstance().getCgenetatorConfig(), defaultDirectory);
         exportJDialog.setVisible(true);
     }//GEN-LAST:event_subMenuExportActionPerformed
 
     private void menuOpenWorkSpaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuOpenWorkSpaceActionPerformed
 
         try {
+            
+            openRepositoryDialog.loadRepositoryInfo();
+            openRepositoryDialog.setVisible(true);
+            if(StringUtils.isNotBlank(openRepositoryDialog.selectedWorkSpace)){
+                loadConfigurations(openRepositoryDialog.selectedWorkSpace);
+                setTitle("CPLATKM - " + CPlatkmContentManager.getInstance().getCurrentWorkSpace().getName());
+                menuProperties.setEnabled(true);
+
+                if(!CPlatkmContentManager.getInstance().getcGeneratorSettings().getRecents().contains(openRepositoryDialog.selectedWorkSpace)){
+                    addRecent(openRepositoryDialog.selectedWorkSpace);
+                }                
+            }  
+            
+        }catch(HeadlessException | CPlatkmException e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Open WorkSpace", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        /**
+        try {
             fileChooserWorkSpace.setDialogTitle("Open WorkSpace");
             int result = fileChooserWorkSpace.showOpenDialog(null);
             if (result == JFileChooser.APPROVE_OPTION) {
                 loadConfigurations(fileChooserWorkSpace.getSelectedFile());
-                setTitle("CGenerator - " + CGeneratorContentManager.getInstance().getCurrentWorkSpace().getName());
+                setTitle("CPLATKM - " + CPlatkmContentManager.getInstance().getCurrentWorkSpace().getName());
                 menuProperties.setEnabled(true);
                 
-                if(!CGeneratorContentManager.getInstance().getcGeneratorSettings().getRecents().contains(fileChooserWorkSpace.getSelectedFile().getAbsolutePath())){
+                if(!CPlatkmContentManager.getInstance().getcGeneratorSettings().getRecents().contains(fileChooserWorkSpace.getSelectedFile().getAbsolutePath())){
                     addRecent(fileChooserWorkSpace.getSelectedFile());
                 }                
             }      
-        }catch(HeadlessException | CGeneratorException e){
+        }catch(HeadlessException | CPlatkmException e){
             JOptionPane.showMessageDialog(this,
             e.getMessage(),
             "Open WorkSpace", JOptionPane.ERROR_MESSAGE);
         }
+        * 
+        * */
  
     }//GEN-LAST:event_menuOpenWorkSpaceActionPerformed
  
     private void subMenuNewWorkSpaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subMenuNewWorkSpaceActionPerformed
-        fileChooserWorkSpace.setDialogTitle("Create Workspace");
+        
+        newWorkSpaceDialog.resetData();
+        newWorkSpaceDialog.setVisible(true);
+        
+        if(StringUtils.isNotBlank(newWorkSpaceDialog.workSpaceName)){
+            
+            try {
+                CPlatkmContentManager.getInstance().createWorkSpace(newWorkSpaceDialog.workSpaceName);
+                loadTreeConfiguration();
+                setTitle("CPLATKM - " + CPlatkmContentManager.getInstance().getCurrentWorkSpace().getName());
+                menuProperties.setEnabled(true);
+                scrollPaneMain.setViewportView(null);
+
+                if(!CPlatkmContentManager.getInstance().getcGeneratorSettings().getRecents().contains(newWorkSpaceDialog.workSpaceName)){
+                    addRecent(newWorkSpaceDialog.workSpaceName);
+                }
+
+            } catch (CPlatkmException ex) {
+                java.util.logging.Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+
+                JOptionPane.showMessageDialog(null,
+                        ex.getMessage(),
+                        "Create WorkSpace", JOptionPane.ERROR_MESSAGE);
+            }       
+
+        }
+
+/**        fileChooserWorkSpace.setDialogTitle("Create Workspace");
         int result = fileChooserWorkSpace.showSaveDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
             if(!fileChooserWorkSpace.getSelectedFile().isDirectory()){
@@ -669,17 +638,17 @@ public class MainJFrame extends javax.swing.JFrame {
             "Create WorkSpace", JOptionPane.WARNING_MESSAGE);
             }else{
                 try {
-                    CGeneratorContentManager.getInstance().createWorkSpace(fileChooserWorkSpace.getSelectedFile());
+                    CPlatkmContentManager.getInstance().createWorkSpace(fileChooserWorkSpace.getSelectedFile());
                     loadTreeConfiguration();
-                    setTitle("CGenerator - " + CGeneratorContentManager.getInstance().getCurrentWorkSpace().getName());
+                    setTitle("CPLATKM - " + CPlatkmContentManager.getInstance().getCurrentWorkSpace().getName());
                     menuProperties.setEnabled(true);
                     scrollPaneMain.setViewportView(null);
                     
-                    if(!CGeneratorContentManager.getInstance().getcGeneratorSettings().getRecents().contains(fileChooserWorkSpace.getSelectedFile().getAbsolutePath())){
+                    if(!CPlatkmContentManager.getInstance().getcGeneratorSettings().getRecents().contains(fileChooserWorkSpace.getSelectedFile().getAbsolutePath())){
                         addRecent(fileChooserWorkSpace.getSelectedFile());
                     }
                     
-                } catch (CGeneratorException ex) {
+                } catch (CPlatkmException ex) {
                     java.util.logging.Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
 
                     JOptionPane.showMessageDialog(null,
@@ -687,7 +656,7 @@ public class MainJFrame extends javax.swing.JFrame {
                             "Create WorkSpace", JOptionPane.ERROR_MESSAGE);
                 }
             }
-        }
+        }*/
     }//GEN-LAST:event_subMenuNewWorkSpaceActionPerformed
 
     private void menuPropertiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPropertiesActionPerformed
@@ -697,8 +666,8 @@ public class MainJFrame extends javax.swing.JFrame {
 
     private void subMenuImportOpenApiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subMenuImportOpenApiActionPerformed
         
-        if(StringUtils.isNotBlank(CGeneratorContentManager.getInstance().getcGeneratorSettings().getLastImportPath())){
-            File defaultDirectory = new File(CGeneratorContentManager.getInstance().getcGeneratorSettings().getLastImportPath());
+        if(StringUtils.isNotBlank(CPlatkmContentManager.getInstance().getcGeneratorSettings().getLastImportPath())){
+            File defaultDirectory = new File(CPlatkmContentManager.getInstance().getcGeneratorSettings().getLastImportPath());
             fileChooser.setCurrentDirectory(defaultDirectory);
         }
         
@@ -724,13 +693,13 @@ public class MainJFrame extends javax.swing.JFrame {
                     openApiImported.setId(Util.generateId());
                     openApiImported.setName(title);
                     openApiImported.setData(cgOpenAPI);
-                    CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().add(openApiImported);
-                    CGeneratorContentManager.getInstance().updateConfigFile();
+                    CPlatkmContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().add(openApiImported);
+                    CPlatkmContentManager.getInstance().updateConfigFile();
                     
                     loadTreeConfiguration();
                     
-                    CGeneratorContentManager.getInstance().getcGeneratorSettings().setLastImportPath(selectedFile.getParent());
-                    CGeneratorContentManager.getInstance().saveSetting();
+                    CPlatkmContentManager.getInstance().getcGeneratorSettings().setLastImportPath(selectedFile.getParent());
+                    CPlatkmContentManager.getInstance().saveSetting();
                         
                 } catch (Exception ex) {
                     java.util.logging.Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -786,7 +755,7 @@ public class MainJFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 MainJFrame newJFrame = new MainJFrame();
-                CGeneratorContentManager.getInstance().setMainFrame(newJFrame);
+                CPlatkmContentManager.getInstance().setMainFrame(newJFrame);
                 newJFrame.setVisible(true);
             }
         });
@@ -836,21 +805,21 @@ public class MainJFrame extends javax.swing.JFrame {
        
         defaultTreeModel = new DefaultTreeModel(treeNodeRoot);
         treeProject.setModel(defaultTreeModel);   
-        CGeneratorContentManager.getInstance().setTreModel(defaultTreeModel);
+        CPlatkmContentManager.getInstance().setTreModel(defaultTreeModel);
         
-        treeProject.setEnabled(CGeneratorContentManager.getInstance().isActive());
-        subMenuExport.setEnabled(CGeneratorContentManager.getInstance().isActive());
-        subMenuImport.setEnabled(CGeneratorContentManager.getInstance().isActive());
-        subMenuImportOpenApi.setEnabled(CGeneratorContentManager.getInstance().isActive());
+        treeProject.setEnabled(CPlatkmContentManager.getInstance().isActive());
+        subMenuExport.setEnabled(CPlatkmContentManager.getInstance().isActive());
+        subMenuImport.setEnabled(CPlatkmContentManager.getInstance().isActive());
+        subMenuImportOpenApi.setEnabled(CPlatkmContentManager.getInstance().isActive());
                 
-        CGeneratorContentManager.getInstance().loadSetting();
+        CPlatkmContentManager.getInstance().loadSetting();
         JMenuItem JMenuItem;
-        for (String recent : CGeneratorContentManager.getInstance().getcGeneratorSettings().getRecents()) {
+        for (String recent : CPlatkmContentManager.getInstance().getcGeneratorSettings().getRecents()) {
             JMenuItem = new JMenuItem(recent);
             JMenuItem.addActionListener((ActionEvent e) -> {
                 try {
-                    loadConfigurations(new File(recent));
-                } catch (CGeneratorException ex) {
+                    loadConfigurations(recent);
+                } catch (CPlatkmException ex) {
                     java.util.logging.Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
 
                     JOptionPane.showMessageDialog(null,
@@ -867,36 +836,40 @@ public class MainJFrame extends javax.swing.JFrame {
      * loadTreeConfiguration
      */
     private void loadTreeConfiguration() {
-        defaultTreeModel = new DefaultTreeModel(MainTreeCreator.getInstance().create(CGeneratorContentManager.getInstance().getCgenetatorConfig()));
+        defaultTreeModel = new DefaultTreeModel(MainTreeCreator.getInstance().create(CPlatkmContentManager.getInstance().getCgenetatorConfig()));
         treeProject.setModel(defaultTreeModel);
-        CGeneratorContentManager.getInstance().setTreModel(defaultTreeModel);
-        treeProject.setEnabled(CGeneratorContentManager.getInstance().isActive());
-        subMenuExport.setEnabled(CGeneratorContentManager.getInstance().isActive());
-        subMenuImport.setEnabled(CGeneratorContentManager.getInstance().isActive());
-        subMenuImportOpenApi.setEnabled(CGeneratorContentManager.getInstance().isActive());
+        CPlatkmContentManager.getInstance().setTreModel(defaultTreeModel);
+        treeProject.setEnabled(CPlatkmContentManager.getInstance().isActive());
+        subMenuExport.setEnabled(CPlatkmContentManager.getInstance().isActive());
+        subMenuImport.setEnabled(CPlatkmContentManager.getInstance().isActive());
+        subMenuImportOpenApi.setEnabled(CPlatkmContentManager.getInstance().isActive());
     }
 
     /**
-     * 
-     * @param cgenetatorConfig 
+     * loadConfigurations
+     * @param cgenetatorConfig  cgenetatorConfig
      */
-    private void loadConfigurations(File workSpaceFolder ) throws CGeneratorException{
-        CGeneratorContentManager.getInstance().loadConfigFile(workSpaceFolder);
+    private void loadConfigurations(String workSpaceFolder ) throws CPlatkmException{
+        CPlatkmContentManager.getInstance().loadConfigFile(workSpaceFolder);
         loadTreeConfiguration();
         scrollPaneMain.setViewportView(null);
-        setTitle("CGenerator - " + CGeneratorContentManager.getInstance().getCurrentWorkSpace().getName());
+        setTitle("CPLATKM - " + CPlatkmContentManager.getInstance().getCurrentWorkSpace().getName());
         menuProperties.setEnabled(true);
     }
 
-    private void addRecent(File selectedFile) {
-        CGeneratorContentManager.getInstance().getcGeneratorSettings().getRecents().add(selectedFile.getAbsolutePath());
-        CGeneratorContentManager.getInstance().saveSetting();
-        JMenuItem JMenuItem = new JMenuItem(selectedFile.getAbsolutePath());
+    /**
+     * addRecent
+     * @param selectedFile selectedFile
+     */
+    private void addRecent(String selectedFile) {
+        CPlatkmContentManager.getInstance().getcGeneratorSettings().getRecents().add(selectedFile);
+        CPlatkmContentManager.getInstance().saveSetting();
+        JMenuItem JMenuItem = new JMenuItem(selectedFile);
         menuSwitchWorkspace.add(JMenuItem);
         JMenuItem.addActionListener((ActionEvent e) -> {
             try {
-                loadConfigurations(new File(selectedFile.getAbsolutePath()));
-            } catch (CGeneratorException ex) {
+                loadConfigurations(selectedFile);
+            } catch (CPlatkmException ex) {
                 java.util.logging.Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
 
                 JOptionPane.showMessageDialog(null,

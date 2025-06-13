@@ -28,10 +28,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel; 
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.desktop.panels.datatype.DataTypePanel;
 import org.platkmframework.cplatkm.processor.data.RunConfiguration;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 
 /**
  *   Author:
@@ -99,7 +99,7 @@ public final class RunConfigurationPanel extends JPanel {
 
     public void refreshTable() {
         tableModel.setRowCount(0);
-        for (RunConfiguration art : CGeneratorContentManager.getInstance().getCgenetatorConfig().getRunConfigurations()) {
+        for (RunConfiguration art : CPlatkmContentManager.getInstance().getCgenetatorConfig().getRunConfigurations()) {
             Object[] rowData = {
                 art.getName()
             };
@@ -116,7 +116,7 @@ public final class RunConfigurationPanel extends JPanel {
     private void editRunConfiguration() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow >= 0) {
-            RunConfiguration  runConfiguration = CGeneratorContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().get(selectedRow);
+            RunConfiguration  runConfiguration = CPlatkmContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().get(selectedRow);
             if(runConfiguration != null){
                 runConfigurationEditorPanel.setData(runConfiguration);
                 scrollPaneMain.setViewportView(runConfigurationEditorPanel);
@@ -135,12 +135,12 @@ public final class RunConfigurationPanel extends JPanel {
              
             if (response == JOptionPane.YES_OPTION) {    
                 try {
-                    CGeneratorContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().remove(selectedRow);
-                    CGeneratorContentManager.getInstance().refreshRunConfigurationSeparator();
+                    CPlatkmContentManager.getInstance().getCgenetatorConfig().getRunConfigurations().remove(selectedRow);
+                    CPlatkmContentManager.getInstance().refreshRunConfigurationSeparator();
                     refreshTable();
                 
-                    CGeneratorContentManager.getInstance().updateConfigFile();
-                } catch (CGeneratorException ex) {
+                    CPlatkmContentManager.getInstance().updateConfigFile();
+                } catch (CPlatkmException ex) {
                     Logger.getLogger(DataTypePanel.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this,
                     ex.getMessage(),

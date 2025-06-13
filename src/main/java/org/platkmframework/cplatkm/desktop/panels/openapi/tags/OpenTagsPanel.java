@@ -29,10 +29,10 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
  
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.processor.data.openapi.CGOpenAPI;
 import org.platkmframework.cplatkm.processor.data.openapi.CGTags;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 import org.platkmframework.util.Util;
 
 public class OpenTagsPanel extends JPanel {
@@ -94,14 +94,7 @@ public class OpenTagsPanel extends JPanel {
     }
     
     public void refreshTableFromtable(String parentId) {
-   /**     cgOpenAPI = CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().stream().filter(o-> o.getId().equals(parentId)).findFirst().orElse(null);
-        tableModel.setRowCount(0);
-        for (CGTags art : cgOpenAPI.getTags()) {
-            Object[] rowData = {
-                art.getName()
-            };
-            tableModel.addRow(rowData);
-        }*/
+ 
     }
 
     private void createTags() {
@@ -111,10 +104,10 @@ public class OpenTagsPanel extends JPanel {
             try {
                 cgOpenAPI.getTags().add(newItem);
                 refreshTable();
-                CGeneratorContentManager.getInstance().tagsAddNewNode(newItem, cgOpenAPI);
+                CPlatkmContentManager.getInstance().tagsAddNewNode(newItem, cgOpenAPI);
                 
-                CGeneratorContentManager.getInstance().updateConfigFile();
-            } catch (CGeneratorException ex) {
+                CPlatkmContentManager.getInstance().updateConfigFile();
+            } catch (CPlatkmException ex) {
                 Logger.getLogger(OpenTagsPanel.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this,
                 ex.getMessage(),
@@ -134,10 +127,10 @@ public class OpenTagsPanel extends JPanel {
                     cgOpenAPI.getTags().set(selectedRow, updated);
                     refreshTable();
                 
-                    CGeneratorContentManager.getInstance().tagsUpdateNewNode(updated);
+                    CPlatkmContentManager.getInstance().tagsUpdateNewNode(updated);
                 
-                    CGeneratorContentManager.getInstance().updateConfigFile();
-                } catch (CGeneratorException ex) {
+                    CPlatkmContentManager.getInstance().updateConfigFile();
+                } catch (CPlatkmException ex) {
                     Logger.getLogger(OpenTagsPanel.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this,
                     ex.getMessage(),
@@ -165,11 +158,10 @@ public class OpenTagsPanel extends JPanel {
                     CGTags cgTags = cgOpenAPI.getTags().get(selectedRow);
                     cgOpenAPI.getTags().remove(selectedRow);
                     refreshTable();
-                    //CGeneratorConfigManager.getInstance().treeRemoveNodeFromParentType(TreeNodeTypes.TEMPLATE_SEPARATOR_TYPE, artifact.getId(), template.getId());
-                    CGeneratorContentManager.getInstance().tagsRemoveNewNode(cgTags, cgOpenAPI);
-                    CGeneratorContentManager.getInstance().updateConfigFile();
+                    CPlatkmContentManager.getInstance().tagsRemoveNewNode(cgTags, cgOpenAPI);
+                    CPlatkmContentManager.getInstance().updateConfigFile();
                     
-                } catch (CGeneratorException ex) {
+                } catch (CPlatkmException ex) {
                     Logger.getLogger(JOptionPane.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this,
                     ex.getMessage(),
@@ -191,7 +183,7 @@ public class OpenTagsPanel extends JPanel {
     private CGTags  showArtifactDialog(CGTags item) {
         
         openTagsDialog.setData(item);
-        openTagsDialog.setLocationRelativeTo(CGeneratorContentManager.getInstance().getMainFrame());
+        openTagsDialog.setLocationRelativeTo(CPlatkmContentManager.getInstance().getMainFrame());
         openTagsDialog.setVisible(true);
         
         if(openTagsDialog.isUdpdated()) 

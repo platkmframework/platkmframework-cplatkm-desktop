@@ -26,14 +26,14 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.desktop.core.components.table.button.BasicButtonAction;
 import org.platkmframework.cplatkm.desktop.core.components.table.button.ButtonsEditor;
 import org.platkmframework.cplatkm.desktop.core.components.table.button.ButtonsPanel;
 import org.platkmframework.cplatkm.desktop.core.components.table.button.ButtonsRenderer;
 import org.platkmframework.databasereader.model.Table;
 import org.platkmframework.cplatkm.processor.data.DatabaseData;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 
 /**
  *
@@ -54,7 +54,7 @@ public class GlobalDataAddDataBaseObjectDialog extends javax.swing.JDialog {
     public GlobalDataAddDataBaseObjectDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        setLocationRelativeTo(CGeneratorContentManager.getInstance().getMainFrame());
+        setLocationRelativeTo(CPlatkmContentManager.getInstance().getMainFrame());
         
         this.selectedTables = new ArrayList<>();
         this.mapTables      = new HashMap<>();
@@ -176,7 +176,7 @@ public class GlobalDataAddDataBaseObjectDialog extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -247,12 +247,12 @@ public class GlobalDataAddDataBaseObjectDialog extends javax.swing.JDialog {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cmbDataBases, 0, 297, Short.MAX_VALUE)
-                    .addComponent(cmbTables, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmbTables, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmbDataBases, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnAddTable, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -305,14 +305,14 @@ public class GlobalDataAddDataBaseObjectDialog extends javax.swing.JDialog {
     private void btnRefreshDataBaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshDataBaseActionPerformed
         if(cmbDataBases.getSelectedItem() != null){
             try {
-                List<Table> tables =  CGeneratorContentManager.getInstance().loadTables((DatabaseData)cmbDataBases.getSelectedItem());
+                List<Table> tables =  CPlatkmContentManager.getInstance().loadTables((DatabaseData)cmbDataBases.getSelectedItem());
                 mapTables.remove(((DatabaseData)cmbDataBases.getSelectedItem()).getId());
                 cmbTables.removeAllItems();
                 mapTables.put(((DatabaseData)cmbDataBases.getSelectedItem()).getId(), tables);
                 for (Table table : tables) {
                     cmbTables.addItem(table);
                 }
-            } catch (CGeneratorException ex) {
+            } catch (CPlatkmException ex) {
                 JOptionPane.showMessageDialog(this,
                     ex.getMessage(),
                     "Refresh database tables", JOptionPane.WARNING_MESSAGE);
@@ -400,7 +400,7 @@ public class GlobalDataAddDataBaseObjectDialog extends javax.swing.JDialog {
         this.cmbDataBases.removeAllItems();
         this.selectedTables.clear();
         this.tableDataModel.setRowCount(0);
-        for (DatabaseData databaseData : CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatabases()) {
+        for (DatabaseData databaseData : CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatabases()) {
             cmbDataBases.addItem(databaseData);
         }
     }

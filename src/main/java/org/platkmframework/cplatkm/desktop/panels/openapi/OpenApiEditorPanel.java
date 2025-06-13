@@ -45,9 +45,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.platkmframework.cplatkm.desktop.commons.editor.ComponentInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.EditComponentsInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.JTextPaneComponentInspector;
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.processor.data.OpenApiImported;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 import org.platkmframework.util.Util;
 
 /**
@@ -78,7 +78,7 @@ public class OpenApiEditorPanel extends javax.swing.JPanel {
         });
         
         colorButton.addActionListener(e -> {
-            Color selectedColor = JColorChooser.showDialog(CGeneratorContentManager.getInstance().getMainFrame(), "Elige un color", Color.BLACK);
+            Color selectedColor = JColorChooser.showDialog(CPlatkmContentManager.getInstance().getMainFrame(), "Elige un color", Color.BLACK);
             if (selectedColor != null) {
                 textPane.setForeground(selectedColor);
             }
@@ -224,12 +224,12 @@ public class OpenApiEditorPanel extends javax.swing.JPanel {
                 
                 try {
                     this.openApiImported.setId(Util.randomAlfaNumericString(255)); 
-                    CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().add(this.openApiImported);
-                    CGeneratorContentManager.getInstance().refreshOpenAPISeparator();  
-                    CGeneratorContentManager.getInstance().updateConfigFile();
+                    CPlatkmContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().add(this.openApiImported);
+                    CPlatkmContentManager.getInstance().refreshOpenAPISeparator();  
+                    CPlatkmContentManager.getInstance().updateConfigFile();
                     editComponentsInspector.reset(); 
 
-                } catch (CGeneratorException ex) {
+                } catch (CPlatkmException ex) {
                     Logger.getLogger(GlobalDataPanel.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this,
                     ex.getMessage(),
@@ -238,18 +238,18 @@ public class OpenApiEditorPanel extends javax.swing.JPanel {
             
             }else{
                 try {
-                        for (int i = 0; i < CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().size(); i++) {
-                            if (CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().get(i).getId().equals(this.openApiImported.getId())) {
-                                CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().set(i, this.openApiImported);
+                        for (int i = 0; i < CPlatkmContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().size(); i++) {
+                            if (CPlatkmContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().get(i).getId().equals(this.openApiImported.getId())) {
+                                CPlatkmContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().set(i, this.openApiImported);
                                 break;
                             }
                         }
-                        CGeneratorContentManager.getInstance().refreshGlobalDataSeparator();
-                        CGeneratorContentManager.getInstance().updateConfigFile();
+                        CPlatkmContentManager.getInstance().refreshGlobalDataSeparator();
+                        CPlatkmContentManager.getInstance().updateConfigFile();
                         
                         editComponentsInspector.reset(); 
                         
-                } catch (CGeneratorException ex) {
+                } catch (CPlatkmException ex) {
                     Logger.getLogger(GlobalDataPanel.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this,
                     ex.getMessage(),
@@ -291,7 +291,7 @@ public class OpenApiEditorPanel extends javax.swing.JPanel {
         this.openApiImported = pOpenApiImported;
         if(this.openApiImported == null){
             this.openApiImported = new OpenApiImported();
-            this.openApiImported.setData(CGeneratorContentManager.getInstance().getDefaultOpenApi());
+            this.openApiImported.setData(CPlatkmContentManager.getInstance().getDefaultOpenApi());
         }
         
         try {

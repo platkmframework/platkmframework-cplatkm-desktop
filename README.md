@@ -1,2 +1,2 @@
-# platkmframework-cgenerator-desktop
+# platkmframework-cplatkm-desktop
  

@@ -37,9 +37,9 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import javax.swing.undo.UndoManager;
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.processor.data.Template;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 
 /**
  *
@@ -121,7 +121,7 @@ public class TemplateCodeEditorJPanel extends javax.swing.JPanel {
         });
         
         colorButton.addActionListener(e -> {
-            Color selectedColor = JColorChooser.showDialog(CGeneratorContentManager.getInstance().getMainFrame(), "Elige un color", Color.BLACK);
+            Color selectedColor = JColorChooser.showDialog(CPlatkmContentManager.getInstance().getMainFrame(), "Elige un color", Color.BLACK);
             if (selectedColor != null) {
                 textPane.setForeground(selectedColor);
             }
@@ -244,8 +244,8 @@ public class TemplateCodeEditorJPanel extends javax.swing.JPanel {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         try {
-            CGeneratorContentManager.getInstance().saveTemplateContent(artifactFolder, this.template.getTemplatename(), textPane.getText());
-        } catch (CGeneratorException ex) {
+            CPlatkmContentManager.getInstance().saveTemplateContent(artifactFolder, this.template.getTemplatename(), textPane.getText());
+        } catch (CPlatkmException ex) {
             Logger.getLogger(TemplateCodeEditorJPanel.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this,
                 ex.getMessage(),
@@ -269,9 +269,9 @@ public class TemplateCodeEditorJPanel extends javax.swing.JPanel {
     private javax.swing.JButton undoButton;
     // End of variables declaration//GEN-END:variables
 
-    public void setTemplate(String artifactFolder, Template template) throws CGeneratorException {
+    public void setTemplate(String artifactFolder, Template template) throws CPlatkmException {
         this.template  = template;
         this.artifactFolder = artifactFolder;
-        textPane.setText(CGeneratorContentManager.getInstance().getTemplateContent(artifactFolder, this.template.getTemplatename()));
+        textPane.setText(CPlatkmContentManager.getInstance().getTemplateContent(artifactFolder, this.template.getTemplatename()));
     }
 }

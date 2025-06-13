@@ -18,8 +18,8 @@ package org.platkmframework.cplatkm.desktop;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 
 /**
  *
@@ -143,14 +143,14 @@ public class PropertiesJDialog extends javax.swing.JDialog {
 
     private void btnApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyActionPerformed
         try {
-            CGeneratorContentManager.getInstance().getCgenetatorConfig().setName(txtProjectName.getText());
-            CGeneratorContentManager.getInstance().updateConfigFile();
+            CPlatkmContentManager.getInstance().getCgenetatorConfig().setName(txtProjectName.getText());
+            CPlatkmContentManager.getInstance().updateConfigFile();
             
             JOptionPane.showMessageDialog(this,
                  "Applied",
                 "Properties", JOptionPane.INFORMATION_MESSAGE);
             
-        } catch (CGeneratorException ex) {
+        } catch (CPlatkmException ex) {
             Logger.getLogger(PropertiesJDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnApplyActionPerformed
@@ -208,7 +208,7 @@ public class PropertiesJDialog extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
  
     public void init(){
-        txtPath.setText(CGeneratorContentManager.getInstance().getCurrentWorkSpace().getAbsolutePath()); 
-        txtProjectName.setText(CGeneratorContentManager.getInstance().getCgenetatorConfig().getName());
+        txtPath.setText(CPlatkmContentManager.getInstance().getCurrentWorkSpace().getAbsolutePath()); 
+        txtProjectName.setText(CPlatkmContentManager.getInstance().getCgenetatorConfig().getName());
     }
 }

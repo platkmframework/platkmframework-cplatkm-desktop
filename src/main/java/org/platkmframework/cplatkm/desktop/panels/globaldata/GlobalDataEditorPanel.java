@@ -33,9 +33,9 @@ import org.platkmframework.cplatkm.desktop.commons.editor.ComponentInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.EditComponentsInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.JTextEditorComponentInspector;
 import org.platkmframework.cplatkm.desktop.commons.editor.JTextPaneComponentInspector;
-import org.platkmframework.cplatkm.desktop.core.CGeneratorContentManager;
+import org.platkmframework.cplatkm.desktop.core.CPlatkmContentManager;
 import org.platkmframework.cplatkm.processor.data.GlobalData;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 import org.platkmframework.util.Util;
 
 /**
@@ -65,7 +65,7 @@ public class GlobalDataEditorPanel extends javax.swing.JPanel {
         });
         
         colorButton.addActionListener(e -> {
-            Color selectedColor = JColorChooser.showDialog(CGeneratorContentManager.getInstance().getMainFrame(), "Elige un color", Color.BLACK);
+            Color selectedColor = JColorChooser.showDialog(CPlatkmContentManager.getInstance().getMainFrame(), "Elige un color", Color.BLACK);
             if (selectedColor != null) {
                 textPane.setForeground(selectedColor);
             }
@@ -99,6 +99,7 @@ public class GlobalDataEditorPanel extends javax.swing.JPanel {
         txtName = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtCode = new javax.swing.JTextField();
+        btnCheckBox = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         textPane = new javax.swing.JTextPane();
@@ -116,20 +117,27 @@ public class GlobalDataEditorPanel extends javax.swing.JPanel {
 
         jLabel3.setText("Code");
 
+        btnCheckBox.setText("Test");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtCode)
-                    .addComponent(txtName))
-                .addGap(15, 15, 15))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtCode)
+                            .addComponent(txtName))
+                        .addGap(15, 15, 15))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnCheckBox)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,7 +150,9 @@ public class GlobalDataEditorPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnCheckBox)
+                .addContainerGap(7, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -188,7 +198,7 @@ public class GlobalDataEditorPanel extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -239,18 +249,19 @@ public class GlobalDataEditorPanel extends javax.swing.JPanel {
             ObjectMapper objectMapper = new ObjectMapper();
             this.globalData.setCode(txtCode.getText());
             this.globalData.setName(txtName.getText());
+            this.globalData.setTest(btnCheckBox.isSelected());
             this.globalData.setData(objectMapper.readValue(textPane.getText(), Map.class));
             
             if(StringUtils.isBlank(this.globalData.getId())){
                 
                 try {
                     this.globalData.setId(Util.randomAlfaNumericString(255)); 
-                    CGeneratorContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().add(this.globalData);
-                    CGeneratorContentManager.getInstance().refreshGlobalDataSeparator();  
-                    CGeneratorContentManager.getInstance().updateConfigFile();
+                    CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().add(this.globalData);
+                    CPlatkmContentManager.getInstance().refreshGlobalDataSeparator();  
+                    CPlatkmContentManager.getInstance().updateConfigFile();
                     editComponentsInspector.reset(); 
 
-                } catch (CGeneratorException ex) {
+                } catch (CPlatkmException ex) {
                     Logger.getLogger(GlobalDataPanel.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this,
                     ex.getMessage(),
@@ -259,18 +270,18 @@ public class GlobalDataEditorPanel extends javax.swing.JPanel {
             
             }else{
                 try {
-                        for (int i = 0; i < CGeneratorContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().size(); i++) {
-                            if (CGeneratorContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().get(i).getId().equals(this.globalData.getId())) {
-                                CGeneratorContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().set(i, this.globalData);
+                        for (int i = 0; i < CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().size(); i++) {
+                            if (CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().get(i).getId().equals(this.globalData.getId())) {
+                                CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas().set(i, this.globalData);
                                 break;
                             }
                         }
-                        CGeneratorContentManager.getInstance().refreshGlobalDataSeparator();
-                        CGeneratorContentManager.getInstance().updateConfigFile();
+                        CPlatkmContentManager.getInstance().refreshGlobalDataSeparator();
+                        CPlatkmContentManager.getInstance().updateConfigFile();
                         
                         editComponentsInspector.reset(); 
                         
-                } catch (CGeneratorException ex) {
+                } catch (CPlatkmException ex) {
                     Logger.getLogger(GlobalDataPanel.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this,
                     ex.getMessage(),
@@ -291,6 +302,7 @@ public class GlobalDataEditorPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnApply;
+    private javax.swing.JCheckBox btnCheckBox;
     private javax.swing.JButton colorButton;
     private javax.swing.JButton decreaseFontSizeButton;
     private javax.swing.JComboBox<String> fontComboBox;
@@ -314,6 +326,7 @@ public class GlobalDataEditorPanel extends javax.swing.JPanel {
         if(this.globalData == null) this.globalData = new GlobalData();
         txtCode.setText(this.globalData.getCode());
         txtName.setText(this.globalData.getName());
+        btnCheckBox.setSelected(this.globalData.isTest());
         
         try {
             ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();

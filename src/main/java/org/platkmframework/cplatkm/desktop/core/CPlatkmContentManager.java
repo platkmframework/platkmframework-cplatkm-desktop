@@ -28,6 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection; 
 import java.sql.DriverManager;
 import java.sql.SQLException; 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,6 @@ import javax.swing.JFrame;
 import javax.swing.tree.DefaultTreeModel;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils; 
-import org.platkmframework.cplatkm.desktop.MainJFrame; 
 import org.platkmframework.cplatkm.desktop.core.contentype.ContentType;
 import org.platkmframework.cplatkm.desktop.tree.CGTreeNode;
 import org.platkmframework.databasereader.core.DatabaseReader;
@@ -52,7 +52,7 @@ import org.platkmframework.cplatkm.processor.data.Template;
 import org.platkmframework.cplatkm.processor.data.openapi.CGOpenAPI;
 import org.platkmframework.cplatkm.processor.data.openapi.CGPaths;
 import org.platkmframework.cplatkm.processor.data.openapi.CGTags;
-import org.platkmframework.cplatkm.processor.exception.CGeneratorException;
+import org.platkmframework.cplatkm.processor.exception.CPlatkmException;
 import org.platkmframework.util.JsonException;
 import org.platkmframework.util.JsonUtil;
 import org.platkmframework.util.Util;
@@ -63,13 +63,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author Eduardo Iglesias
  */
-public class CGeneratorContentManager {
+public class CPlatkmContentManager {
     
-    //private static final String C_CGENERATOR_HOME = "CGENERATOR_HOME";
     private static final String C_PLATKMFRAMEWORK_FOLDER = ".platkmframework";
     private static final String C_CGENERATOR = "cgenerator";
+    private static final String C_REPOSITORY = "repository";
     
-    private static final Logger logger = LoggerFactory.getLogger(CGeneratorContentManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(CPlatkmContentManager.class);
     
     boolean active = false;
     CGenetatorConfig cgenetatorConfig;
@@ -85,18 +85,18 @@ public class CGeneratorContentManager {
     private Map<?,?> defaultOpenApi;
     
     
-    private CGeneratorContentManager() {
+    private CPlatkmContentManager() {
         this.cgenetatorConfig = new CGenetatorConfig();
     }
     
-    public static CGeneratorContentManager getInstance() {
+    public static CPlatkmContentManager getInstance() {
         return CGeneratorConfigManagerHolder.INSTANCE;
     }
 
 
  
     private static class CGeneratorConfigManagerHolder {
-        private static final CGeneratorContentManager INSTANCE = new CGeneratorContentManager();
+        private static final CPlatkmContentManager INSTANCE = new CPlatkmContentManager();
     }
 
 
@@ -118,7 +118,7 @@ public class CGeneratorContentManager {
     public void refreshGlobalDataSeparator() {
         CGTreeNode node = searchNodeByType((CGTreeNode)defaultTreeModel.getRoot(), TreeNodeTypes.GLOBAL_DATA_SEPARATOR_TYPE.name(), null, null);
         node.removeAllChildren();
-        for (GlobalData globalData : CGeneratorContentManager.getInstance().getCgenetatorConfig().getGlobalDatas()) {
+        for (GlobalData globalData : CPlatkmContentManager.getInstance().getCgenetatorConfig().getGlobalDatas()) {
             node.add(MainTreeCreator.getInstance().createNodeGlobalData(globalData));
         }
         defaultTreeModel.nodeStructureChanged(node);
@@ -127,7 +127,7 @@ public class CGeneratorContentManager {
     public void refreshOpenAPISeparator() {
         CGTreeNode node = searchNodeByType((CGTreeNode)defaultTreeModel.getRoot(), TreeNodeTypes.OPEN_API_SEPARATOR_TYPE.name(), null, null);
         node.removeAllChildren();
-        for (OpenApiImported openApiImported : CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs()) {
+        for (OpenApiImported openApiImported : CPlatkmContentManager.getInstance().getCgenetatorConfig().getOpenAPIs()) {
             node.add(MainTreeCreator.getInstance().createOpenAPI(openApiImported));
         }
         defaultTreeModel.nodeStructureChanged(node);      
@@ -136,20 +136,13 @@ public class CGeneratorContentManager {
     public void refreshOpenAPITagsSeparator(CGOpenAPI cgOpenApiParent) {
         CGTreeNode node = searchNodeByType((CGTreeNode)defaultTreeModel.getRoot(), TreeNodeTypes.OPEN_API_TAG_SEPARATOR_TYPE.name(), null, cgOpenApiParent.getId());
         node.removeAllChildren();
-     /**   
-        for (int i = 0; i < CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().size(); i++) {
-            if (CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().get(i).getId().equals(cgOpenApiParent.getId())) {
-                MainTreeCreator.getInstance().addCGTAgsToSepartor(CGeneratorContentManager.getInstance().getCgenetatorConfig().getOpenAPIs().get(i), node);
-            }
-        } 
-        * */
         defaultTreeModel.nodeStructureChanged(node);      
     }
     
     public void refreshDataBaseSeparator() {
         CGTreeNode node = searchNodeByType((CGTreeNode)defaultTreeModel.getRoot(), TreeNodeTypes.DATABASE_SEPARATOR_TYPE.name(), null, null);
         node.removeAllChildren();
-        for (DatabaseData databaseData : CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatabases()) {
+        for (DatabaseData databaseData : CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatabases()) {
             node.add(MainTreeCreator.getInstance().createNodeDataBase(databaseData));
         }
         defaultTreeModel.nodeStructureChanged(node);
@@ -158,7 +151,7 @@ public class CGeneratorContentManager {
     public void refreshDataTypeSeparator() {
         CGTreeNode node = searchNodeByType((CGTreeNode)defaultTreeModel.getRoot(), TreeNodeTypes.DATATYPE_SEPARATOR_TYPE.name(), null, null);
         node.removeAllChildren();
-        for (DataTypeMapping dataTypeMapping : CGeneratorContentManager.getInstance().getCgenetatorConfig().getDatatypes()) {
+        for (DataTypeMapping dataTypeMapping : CPlatkmContentManager.getInstance().getCgenetatorConfig().getDatatypes()) {
             node.add(MainTreeCreator.getInstance().createNodeDataTypeMapping(dataTypeMapping));
         }
         defaultTreeModel.nodeStructureChanged(node);
@@ -222,13 +215,13 @@ public class CGeneratorContentManager {
     public void refreshRunConfigurationSeparator() {
         CGTreeNode node = searchNodeByType((CGTreeNode)defaultTreeModel.getRoot(), TreeNodeTypes.RUN_CONFIGURATION_SEPARATOR_TYPE.name(), null, null);
         node.removeAllChildren();
-        for (RunConfiguration runConfiguration : CGeneratorContentManager.getInstance().getCgenetatorConfig().getRunConfigurations()) {
+        for (RunConfiguration runConfiguration : CPlatkmContentManager.getInstance().getCgenetatorConfig().getRunConfigurations()) {
             node.add(MainTreeCreator.getInstance().createNodeRunConfiguration(runConfiguration));
         }
         defaultTreeModel.nodeStructureChanged(node);
     } 
      
-    public void createArtifactFolder(String newFoldername) throws CGeneratorException {
+    public void createArtifactFolder(String newFoldername) throws CPlatkmException {
 
         try {
             
@@ -239,11 +232,11 @@ public class CGeneratorContentManager {
             
         } catch (IOException ex) {
             logger.error(ex.getMessage());
-            throw new CGeneratorException(ex.getMessage()); 
+            throw new CPlatkmException(ex.getMessage()); 
         }
     }
 
-    public void createTemplateFile(String artifactFolder, String templatename) throws CGeneratorException{
+    public void createTemplateFile(String artifactFolder, String templatename) throws CPlatkmException{
  
          try {
             File fileTemplate = new File(currentWorkSpace.getAbsolutePath() + File.separator +
@@ -251,11 +244,11 @@ public class CGeneratorContentManager {
             FileUtils.write(fileTemplate, "", "UTF-8");
         } catch (IOException ex) {
             logger.error(ex.getMessage());
-            throw new CGeneratorException(ex.getMessage()); 
+            throw new CPlatkmException(ex.getMessage()); 
         }
     }
 
-    public String getTemplateContent(String artifactFolder, String templatename) throws CGeneratorException {
+    public String getTemplateContent(String artifactFolder, String templatename) throws CPlatkmException {
  
         try {
             
@@ -265,11 +258,11 @@ public class CGeneratorContentManager {
             
         } catch (IOException ex) {
             logger.error(ex.getMessage());
-            throw new CGeneratorException(ex.getMessage()); 
+            throw new CPlatkmException(ex.getMessage()); 
         }
     }
 
-    public void saveTemplateContent(String artifactFolder, String templatename, String text) throws CGeneratorException {
+    public void saveTemplateContent(String artifactFolder, String templatename, String text) throws CPlatkmException {
  
          try {
             
@@ -278,11 +271,11 @@ public class CGeneratorContentManager {
             FileUtils.writeStringToFile(fileTemplate, text, "UTF-8");
         } catch (IOException ex) {
             logger.error(ex.getMessage());
-            throw new CGeneratorException(ex.getMessage()); 
+            throw new CPlatkmException(ex.getMessage()); 
         }
     }
 
-    public List<Table> loadTables(DatabaseData databaseData) throws CGeneratorException {
+    public List<Table> loadTables(DatabaseData databaseData) throws CPlatkmException {
                 
         try {
             Class.forName(databaseData.getDriver());
@@ -295,7 +288,7 @@ public class CGeneratorContentManager {
         
         } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException | SQLException ex) {
             logger.error(ex.getMessage());
-            throw new CGeneratorException(ex.getMessage()); 
+            throw new CPlatkmException(ex.getMessage()); 
         }
     }
   
@@ -339,33 +332,32 @@ public class CGeneratorContentManager {
         }
 
     }
- 
 
-    public void loadConfigFile(File workSpaceFolder) throws CGeneratorException{
+    public void loadConfigFile(String workSpaceFolder) throws CPlatkmException{
         
         try {
             
             TypeToken<CGenetatorConfig> type = new TypeToken<CGenetatorConfig>() {};
-            this.cliConfigurationFile = new File(workSpaceFolder.getAbsolutePath() + File.separator + "configuration");
+            this.cliConfigurationFile = new File( getRepositoryPath() + File.separator + workSpaceFolder + File.separator + "configuration");
             this.cgenetatorConfig = JsonUtil.jsonToObjectTypeReference(FileUtils.readFileToString(cliConfigurationFile, "UTF-8"), type);
             
-            this.currentWorkSpace = workSpaceFolder;
+            this.currentWorkSpace = new File( getRepositoryPath() + File.separator + workSpaceFolder);
             this.active = true;
         } catch (JsonException | IOException ex) {
-            java.util.logging.Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
-            throw new CGeneratorException("Error cargando el fichero de configuración");
+            java.util.logging.Logger.getLogger(CPlatkmContentManager.class.getName()).log(Level.SEVERE, null, ex);
+            throw new CPlatkmException("Error cargando el fichero de configuración");
         }
   
     }
     
-    public void updateConfigFile() throws CGeneratorException{
+    public void updateConfigFile() throws CPlatkmException{
     
         try {
             String strJson = JsonUtil.objectToJson(cgenetatorConfig);
             FileUtils.write(cliConfigurationFile, strJson, "UTF-8");
         } catch (IOException | JsonException ex) {
-            java.util.logging.Logger.getLogger(CGeneratorContentManager.class.getName()).log(Level.SEVERE, null, ex);
-            throw new CGeneratorException("Error guardando el fichero de configuración");
+            java.util.logging.Logger.getLogger(CPlatkmContentManager.class.getName()).log(Level.SEVERE, null, ex);
+            throw new CPlatkmException("Error guardando el fichero de configuración");
         }
         
     }
@@ -390,7 +382,29 @@ public class CGeneratorContentManager {
         return null;
     }
     
+    public String getRepositoryPath(){
+        String userHomePath = System.getProperty("user.home");
+        return userHomePath + File.separator + C_PLATKMFRAMEWORK_FOLDER + File.separator + C_REPOSITORY;
+    }
+    
+    public List<String> getWorkSpaceFolders(){
+        String userHomePath = System.getProperty("user.home"); 
+        File repositoryFolder = new File(userHomePath + File.separator + C_PLATKMFRAMEWORK_FOLDER + File.separator + C_REPOSITORY);
+           
+        List<String> workSpaceList = new ArrayList<>();
+                
+        File file;
+        for (File listFile : repositoryFolder.listFiles()) {
+            file = listFile;
+            if(file.exists() && file.isDirectory() && !file.isHidden())
+                workSpaceList.add(file.getName());
+        }
+        
+        return workSpaceList;
+    }
+    
     public void loadSetting(){
+        
         
         try {
             String userHomePath = System.getProperty("user.home"); 
@@ -407,35 +421,48 @@ public class CGeneratorContentManager {
             }         
 
         } catch (IOException | JsonException ex) {
-            java.util.logging.Logger.getLogger(CGeneratorContentManager.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CPlatkmContentManager.class.getName()).log(Level.SEVERE, null, ex);
             cGeneratorSettings = new CGeneratorSettings();
         }  
+        
+        try {
+            String userHomePath = System.getProperty("user.home"); 
+            File repositoryFolder = new File(userHomePath + File.separator + C_PLATKMFRAMEWORK_FOLDER + File.separator + C_REPOSITORY);
+            if(!repositoryFolder.exists() || !repositoryFolder.isDirectory()){
+                FileUtils.forceMkdir(repositoryFolder);
+            }        
+
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(CPlatkmContentManager.class.getName()).log(Level.SEVERE, null, ex);
+        }  
+     
     }
-    
+ 
     public void saveSetting(){
         try {
             String userHomePath = System.getProperty("user.home");
             String strJson = JsonUtil.objectToJson(cGeneratorSettings);
             FileUtils.write(new File(userHomePath + File.separator + C_PLATKMFRAMEWORK_FOLDER + File.separator + C_CGENERATOR + File.separator + "settings"), strJson, "UTF-8");
         } catch (IOException | JsonException ex) {
-            java.util.logging.Logger.getLogger(CGeneratorContentManager.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CPlatkmContentManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+ 
     
-    public void createWorkSpace(File folder) throws CGeneratorException{
+    public void createWorkSpace(String newWorkSpaceName) throws CPlatkmException{
         try {
-            this.cliConfigurationFile = new File(folder.getAbsolutePath() + File.separator + "configuration");
+            this.currentWorkSpace = new File( this.getRepositoryPath() + File.separator + newWorkSpaceName);
+            this.cliConfigurationFile = new File(this.currentWorkSpace + File.separator + "configuration");
             this.cgenetatorConfig = new CGenetatorConfig();
-            this.cgenetatorConfig.setName(folder.getName());
+            this.cgenetatorConfig.setName(newWorkSpaceName);
             String strJson = JsonUtil.objectToJson(this.cgenetatorConfig );
             FileUtils.write(cliConfigurationFile, strJson, "UTF-8");
             
-            this.currentWorkSpace = folder;
             this.active = true;
             
         } catch (IOException | JsonException ex) {
-            java.util.logging.Logger.getLogger(CGeneratorContentManager.class.getName()).log(Level.SEVERE, null, ex);
-            throw new CGeneratorException("Error creando el workspace");
+            java.util.logging.Logger.getLogger(CPlatkmContentManager.class.getName()).log(Level.SEVERE, null, ex);
+            throw new CPlatkmException("Error creando el workspace");
         }   
     }
  
@@ -471,9 +498,11 @@ public class CGeneratorContentManager {
         return currentWorkSpace;
     }
 
+ 
     public CGeneratorSettings getcGeneratorSettings() {
         return cGeneratorSettings;
     }
+ 
 
     public List<ContentType> getContentTypes() {
         return contentTypes;
@@ -486,7 +515,7 @@ public class CGeneratorContentManager {
     public Map<?, ?> getDefaultOpenApi() {
         return defaultOpenApi;
     }
-
+    
     public void setDefaultOpenApi(Map<?, ?> defaultOpenApi) {
         this.defaultOpenApi = defaultOpenApi;
     }
